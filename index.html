@@ -2,39 +2,66 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SofieBurn</title>
-  <link rel="stylesheet" href="intro.css" />
   <style>
     body {
       margin: 0;
       background-color: #111;
-      color: #ffa07a;
-      font-family: monospace;
+      color: #fcae91;
+      font-family: 'Courier New', Courier, monospace;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
+      justify-content: center;
       height: 100vh;
     }
-    #introScreen {
-      text-align: center;
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
     }
-    #gameCanvas {
+
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      background-color: #fff;
+      border: none;
+      border-radius: 5px;
+    }
+
+    canvas {
       display: none;
-      background-color: black;
+      border: 2px solid #fcae91;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
-  <div id="introScreen">
-    <h1>SofieBurn</h1>
-    <button id="startButton">Light the Flame</button>
-  </div>
 
+  <h1>SofieBurn</h1>
+  <button id="startButton">Light the Flame</button>
+
+  <!-- Game Canvas -->
   <canvas id="gameCanvas" width="800" height="600"></canvas>
 
-  <!-- Load scripts after DOM is ready -->
-  <script src="intro.js" defer></script>
-  <script src="game.js" defer></script>
+  <!-- Load Game Logic -->
+  <script src="game.js"></script>
+
+  <!-- Init + Asset Check -->
+  <script>
+    document.getElementById('startButton')?.addEventListener('click', () => {
+      const canvas = document.getElementById('gameCanvas');
+      canvas.style.display = 'block';
+
+      if (typeof initGame === 'function') {
+        initGame(canvas);
+      } else {
+        console.error("initGame() is not defined. Make sure it's declared in game.js.");
+      }
+    });
+  </script>
+
 </body>
 </html>
