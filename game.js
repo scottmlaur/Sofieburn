@@ -1,40 +1,39 @@
-// Global Variables
+// game.js
+
 let canvas, ctx;
-let background = new Image();
-background.src = 'assets/backgrounds/sanctuary_bg.png';
+let background;
 
 function initGame() {
   console.log("🔥 initGame() fired");
 
-  // Get DOM elements
-  canvas = document.getElementById('gameCanvas');
-  ctx = canvas.getContext('2d');
-  document.getElementById('introImage').style.display = 'none';
-  canvas.style.display = 'block';
+  canvas = document.getElementById("gameCanvas");
+  ctx = canvas.getContext("2d");
 
-  // When the background is loaded, start the game loop
+  // Load and draw the background
+  background = new Image();
+  background.src = 'assets/backgrounds/sanctuary_bg.png';
+
   background.onload = () => {
-    requestAnimationFrame(gameLoop);
+    console.log("🖼️ Background loaded");
+    draw(); // Start draw loop after image loads
   };
 }
 
-// Main Game Loop
-function gameLoop() {
+function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // Draw background
   ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-  // Example debug text
-  ctx.fillStyle = 'white';
-  ctx.font = '32px Courier New';
-  ctx.fillText("SofieBurn Running 🕯️", 220, 300);
+  // You can draw other stuff here (like candle, pipes, etc)
 
-  requestAnimationFrame(gameLoop);
+  requestAnimationFrame(draw);
 }
 
-// Event Binding (wait for DOM to be ready)
-window.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   console.log("🔥 DOM Ready, binding start button");
-  document.getElementById('startButton').addEventListener('click', initGame);
+
+  const startButton = document.getElementById("startButton");
+  startButton.addEventListener("click", () => {
+    document.getElementById("startButton").style.display = "none"; // hide button
+    initGame();
+  });
 });
