@@ -2,56 +2,41 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SofieBurn</title>
+  <link rel="stylesheet" href="style.css" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     body {
-      background-color: #000;
-      color: white;
-      font-family: sans-serif;
-      height: 100vh;
-      overflow: hidden;
+      margin: 0;
+      background-color: #111;
       display: flex;
-      justify-content: center;
-      align-items: center;
       flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-family: sans-serif;
     }
 
     #intro-screen {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      gap: 20px;
     }
 
     #intro-image {
-      max-width: 90vw;
-      max-height: 80vh;
+      max-width: 100%;
       height: auto;
-      width: auto;
-      display: block;
-      margin: 0 auto;
     }
 
     #start-btn {
-      margin-top: 20px;
       padding: 10px 20px;
       font-size: 16px;
-      background-color: #222;
-      color: white;
-      border: 1px solid white;
       cursor: pointer;
     }
 
-    canvas {
+    #game-canvas {
       display: none;
-      background: black;
+      background-color: black;
     }
   </style>
 </head>
@@ -63,17 +48,9 @@
 
   <canvas id="game-canvas" width="800" height="600"></canvas>
 
-  <script>
-    const introScreen = document.getElementById('intro-screen');
-    const startBtn = document.getElementById('start-btn');
-    const canvas = document.getElementById('game-canvas');
-
-    startBtn.addEventListener('click', () => {
-      introScreen.style.display = 'none';
-      canvas.style.display = 'block';
-      if (typeof startGame === 'function') startGame(); // Safe game init
-    });
-  </script>
+  <script src="intro.js"></script>
+  <script src="player.js"></script>
+  <script src="main.js"></script>
   <script src="game.js"></script>
 </body>
 </html>
