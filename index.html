@@ -4,66 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SofieBurn</title>
-  <link rel="stylesheet" href="intro.css">
-  <style>
-    body {
-      background-color: #111;
-      font-family: 'Courier New', monospace;
-      color: #f99;
-      text-align: center;
-      margin: 0;
-      padding: 20px;
-    }
-
-    h1 {
-      font-size: 2.5em;
-      margin-bottom: 20px;
-    }
-
-    button {
-      background-color: #f99;
-      border: none;
-      padding: 12px 24px;
-      font-weight: bold;
-      font-size: 16px;
-      cursor: pointer;
-      margin: 10px;
-      border-radius: 6px;
-      font-family: 'Courier New', monospace;
-    }
-
-    #gameCanvas {
-      border: 1px solid #f99;
-      background-color: black;
-      display: block;
-      margin: 20px auto;
-    }
-
-    .btn-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .btn-icon img {
-      height: 20px;
-      width: 20px;
-    }
-  </style>
+  <link rel="stylesheet" href="intro.css" />
 </head>
 <body>
   <h1>SofieBurn</h1>
 
-  <div>
-    <button id="startButton">Light the Flame</button>
-    <button id="introButton" class="btn-icon">
-      <img src="assets/characters/intro.png" alt="Sofie Intro"/>
+  <div class="button-row">
+    <button id="start-button">Light the Flame</button>
+    <button id="intro-button">
+      <img src="assets/intro.png" alt="Sofie Intro" height="16" style="vertical-align: middle;" />
       Sofie Intro
     </button>
   </div>
 
-  <canvas id="gameCanvas" width="600" height="600"></canvas>
+  <div id="game-container"></div>
 
   <script src="game.js"></script>
 </body>
