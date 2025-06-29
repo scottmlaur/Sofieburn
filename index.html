@@ -6,55 +6,54 @@
   <title>SofieBurn</title>
   <style>
     body {
-      margin: 0;
       background-color: #111;
-      color: #f9a48d;
-      font-family: 'Courier New', Courier, monospace;
+      color: #fcae9d;
+      font-family: monospace;
       text-align: center;
+      margin: 0;
+      padding: 0;
     }
 
     h1 {
-      margin-top: 50px;
-      font-size: 2.5rem;
+      margin-top: 40px;
+      font-size: 2.5em;
     }
 
     #startBtn {
-      margin: 20px;
-      padding: 10px 20px;
+      margin: 20px auto;
+      padding: 12px 24px;
       font-weight: bold;
-      border: none;
-      border-radius: 5px;
       background-color: #fff;
-      color: #111;
+      border: none;
+      border-radius: 6px;
       cursor: pointer;
     }
 
     #gameContainer {
-      margin: 20px auto;
-      border: 2px solid #f9a48d;
+      border: 2px solid #fcae9d;
+      margin: 0 auto;
       width: 800px;
       height: 600px;
-      background-color: #111;
       position: relative;
     }
 
     #introImage {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      max-width: 90%;
-      max-height: 90%;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
     }
   </style>
 </head>
 <body>
+
   <h1>SofieBurn</h1>
-  <button id="startBtn" onclick="initGame()">Light the Flame</button>
-  
+  <button id="startBtn">Light the Flame</button>
+
   <div id="gameContainer">
     <img id="introImage" src="assets/intro.png" alt="Sofie Intro">
-    <canvas id="gameCanvas" width="800" height="600" style="display: none;"></canvas>
+    <canvas id="gameCanvas" width="800" height="600" style="display:none;"></canvas>
   </div>
 
   <script src="game.js"></script>
