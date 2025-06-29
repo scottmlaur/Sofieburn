@@ -1,59 +1,59 @@
-// game.js
+function initGame() {
+  const container = document.getElementById('game-container');
+  container.innerHTML = ''; // Clear intro
 
-function startGameLoop() {
-  const canvas = document.getElementById('gameCanvas');
+  // Create canvas
+  const canvas = document.createElement('canvas');
+  canvas.width = 800;
+  canvas.height = 600;
+  canvas.style.display = 'block';
+  canvas.style.margin = '0 auto';
+  container.appendChild(canvas);
+
   const ctx = canvas.getContext('2d');
 
-  let candle = {
-    x: 100,
-    y: 200,
-    width: 32,
-    height: 32,
-    color: '#FF9900',
-    gravity: 0.5,
-    velocity: 0
+  // Load candle sprite (placeholder path)
+  const candle = new Image();
+  candle.src = 'assets/candle_idle.png'; // Replace with your actual asset
+
+  // Set initial position
+  let candleX = 100;
+  let candleY = 250;
+  let velocityY = 0;
+  const gravity = 0.5;
+  const lift = -10;
+
+  // Handle input
+  document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space') {
+      velocityY = lift;
+    }
+  });
+
+  // Game loop
+  function gameLoop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Update position
+    velocityY += gravity;
+    candleY += velocityY;
+
+    // Simple floor collision
+    if (candleY > canvas.height - 50) {
+      candleY = canvas.height - 50;
+      velocityY = 0;
+    }
+
+    // Draw sprite
+    ctx.drawImage(candle, candleX, candleY, 40, 40);
+
+    requestAnimationFrame(gameLoop);
+  }
+
+  candle.onload = () => {
+    gameLoop(); // Start loop after sprite loads
   };
-
-  let pipes = [
-    { x: 800, y: 0, width: 60, height: 200 },
-    { x: 800, y: 350, width: 60, height: 250 }
-  ];
-
-  function update() {
-    candle.velocity += candle.gravity;
-    candle.y += candle.velocity;
-
-    pipes.forEach(pipe => {
-      pipe.x -= 2;
-      if (pipe.x + pipe.width < 0) {
-        pipe.x = 800;
-      }
-    });
-  }
-
-  function draw() {
-    ctx.fillStyle = '#0D0D0D';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Draw candle
-    ctx.fillStyle = candle.color;
-    ctx.fillRect(candle.x, candle.y, candle.width, candle.height);
-
-    // Draw pipes
-    ctx.fillStyle = '#2A1C17';
-    pipes.forEach(pipe => {
-      ctx.fillRect(pipe.x, pipe.y, pipe.width, pipe.height);
-    });
-  }
-
-  function loop() {
-    update();
-    draw();
-    requestAnimationFrame(loop);
-  }
-
-  loop();
 }
 
-// Attach to global for intro.js
-window.initGame = startGameLoop;
+// Expose to intro.js
+window.initGame = initGame;
