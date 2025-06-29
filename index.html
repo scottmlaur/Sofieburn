@@ -10,30 +10,33 @@
       color: #fca396;
       font-family: 'Courier New', monospace;
       text-align: center;
+      margin: 0;
       padding: 20px;
     }
 
     button {
-      margin-top: 10px;
-      padding: 10px 20px;
+      margin-top: 20px;
+      padding: 12px 24px;
+      font-size: 16px;
       font-weight: bold;
-      background-color: #fff;
+      background-color: #fca396;
+      color: #111;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
       cursor: pointer;
     }
 
     #introImage {
       max-width: 90%;
-      margin-top: 20px;
+      margin-top: 30px;
       border: 2px solid #fca396;
-      padding: 10px;
+      border-radius: 8px;
     }
 
     #gameCanvas {
       display: none;
       background-color: #000;
-      margin-top: 20px;
+      margin-top: 30px;
       border: 2px solid #fca396;
     }
   </style>
@@ -43,7 +46,8 @@
   <h1>SofieBurn</h1>
   <button id="startButton">Light the Flame</button>
 
-  <img id="introImage" src="assets/intro.png" alt="Sofie Intro">
+  <!-- Update this filename if needed -->
+  <img id="introImage" src="assets/sofie_intro.png" alt="Sofie Intro">
 
   <canvas id="gameCanvas" width="800" height="600"></canvas>
 
