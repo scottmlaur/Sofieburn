@@ -2,17 +2,46 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SofieBurn</title>
   <link rel="stylesheet" href="intro.css" />
+  <style>
+    body {
+      margin: 0;
+      background-color: #111;
+      font-family: 'Courier New', monospace;
+      color: #fca89f;
+      text-align: center;
+    }
+
+    #gameCanvas {
+      display: none;
+      background-color: black;
+    }
+
+    #introScreen {
+      padding-top: 100px;
+    }
+
+    button {
+      background-color: #fff;
+      color: #000;
+      border: none;
+      padding: 8px 12px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
   <div id="introScreen">
     <h1>SofieBurn</h1>
-    <button onclick="startGame()">Light the Flame</button>
+    <button id="startButton">Light the Flame</button>
   </div>
-  <canvas id="gameCanvas" width="800" height="600" style="display: none;"></canvas>
 
+  <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+  <!-- JS Files -->
   <script src="intro.js"></script>
   <script src="game.js"></script>
 </body>
