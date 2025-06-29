@@ -3,52 +3,75 @@
 <head>
   <meta charset="UTF-8" />
   <title>SofieBurn</title>
+  <link rel="stylesheet" href="style.css" />
   <style>
     body {
       margin: 0;
       background-color: #111;
+      font-family: Arial, sans-serif;
+      color: white;
       display: flex;
+      flex-direction: column;
+      align-items: center;
       justify-content: center;
-      align-items: center;
       height: 100vh;
-      flex-direction: column;
     }
 
-    #intro-screen {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
+    #game-container {
+      text-align: center;
     }
 
-    #game-canvas {
+    #intro-image {
+      max-width: 100%;
+      height: auto;
+    }
+
+    #start-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #222;
+      color: white;
+      border: 1px solid #555;
+      cursor: pointer;
+    }
+
+    #start-btn:hover {
+      background-color: #333;
+    }
+
+    canvas {
       display: none;
       background-color: black;
     }
   </style>
 </head>
 <body>
-  <div id="intro-screen">
-    <img src="assets/sofie_intro.png" id="intro-image" alt="Sofie" />
+  <div id="game-container">
+    <img id="intro-image" src="assets/sofie-intro.png" alt="Sofie holding candle" />
     <button id="start-btn">Start Game</button>
   </div>
 
-  <canvas id="game-canvas" width="800" height="600"></canvas>
+  <canvas id="gameCanvas" width="800" height="600"></canvas>
 
   <script>
-    const startBtn = document.getElementById('start-btn');
-    const introScreen = document.getElementById('intro-screen');
-    const gameCanvas = document.getElementById('game-canvas');
-    const ctx = gameCanvas.getContext('2d');
+    document.getElementById('start-btn').addEventListener('click', () => {
+      document.getElementById('game-container').style.display = 'none';
+      const canvas = document.getElementById('gameCanvas');
+      canvas.style.display = 'block';
 
-    startBtn.addEventListener('click', () => {
-      introScreen.style.display = 'none';
-      gameCanvas.style.display = 'block';
-
-      // TEMP TEST: Draw red square
+      // Confirm rendering is alive
+      const ctx = canvas.getContext('2d');
       ctx.fillStyle = 'red';
-      ctx.fillRect(100, 100, 200, 200);
+      ctx.fillRect(50, 50, 50, 50);
+      console.log('Canvas displayed and ready.');
     });
   </script>
+
+  <!-- Hook your game files -->
+  <script src="intro.js"></script>
+  <script src="player.js"></script>
+  <script src="main.js"></script>
+  <script src="game.js"></script>
 </body>
 </html>
