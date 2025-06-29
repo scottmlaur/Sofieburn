@@ -1,82 +1,99 @@
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
 
-const candle = {
-  x: 100,
-  y: 200,
-  width: 32,
-  height: 32,
-  velocity: 0,
-  gravity: 0.5,
-  jump: -8,
+const gravity = 0.6;
+const jump = -10;
+
+let candle = {
+    x: 150,
+    y: 150,
+    width: 30,
+    height: 30,
+    velocity: 0
 };
 
 let pipes = [];
-let gameRunning = false;
+let pipeGap = 140;
+let pipeWidth = 60;
+let pipeSpacing = 280;
 
-const pipeGap = 150;
-const pipeWidth = 60;
-const pipeSpacing = 300;
-const pipeSpeed = 3;
+let background = new Image();
+background.src = 'assets/backgrounds/sanctuary_bg.png';
 
-// 🔥 Entry point from intro.js
+let candleImg = new Image();
+candleImg.src = 'assets/characters/candle.png';
+
 function initGame() {
-  console.log("🚀 initGame called");
-  resetGame();
-  gameRunning = true;
-  requestAnimationFrame(gameLoop);
-}
-
-// 🔄 Start the game state
-function resetGame() {
-  candle.y = canvas.height / 2;
-  candle.velocity = 0;
-  pipes = [];
-
-  // Create 5 initial pipes
-  for (let i = 0; i < 5; i++) {
-    spawnPipe(canvas.width + i * pipeSpacing);
-  }
-}
-
-// 🧱 Pipe generation
-function spawnPipe(x) {
-  const minHeight = 50;
-  const maxTop = canvas.height - pipeGap - minHeight;
-  const top = Math.random() * maxTop + minHeight;
-
-  pipes.push({ x, top, bottom: top + pipeGap });
-}
-
-// 🌀 Game loop
-function gameLoop() {
-  if (!gameRunning) return;
-  update();
-  draw();
-  requestAnimationFrame(gameLoop);
-}
-
-// 🧠 Update logic
-function update() {
-  candle.velocity += candle.gravity;
-  candle.y += candle.velocity;
-
-  for (let i = 0; i < pipes.length; i++) {
-    const p = pipes[i];
-    p.x -= pipeSpeed;
-
-    // 💥 Collision
-    if (
-      candle.x < p.x + pipeWidth &&
-      candle.x + candle.width > p.x &&
-      (candle.y < p.top || candle.y + candle.height > p.bottom)
-    ) return endGame();
-
-    // 🔁 Recycle
-    if (p.x + pipeWidth < 0) {
-      pipes.splice(i, 1);
-      i--;
+    pipes = [];
+    for (let i = 0; i < 3; i++) {
+        let pipeX = canvas.width + i * pipeSpacing;
+        let pipeY = Math.floor(Math.random() * 200) + 50;
+        pipes.push({ x: pipeX, y: pipeY });
     }
-  }
 
-  const last = pipes[pipes.length -]()
+    candle.y = 150;
+    candle.velocity = 0;
+
+    document.addEventListener('keydown', () => {
+        candle.velocity = jump;
+    });
+
+    requestAnimationFrame(gameLoop);
+}
+
+function drawBackground() {
+    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+}
+
+function drawCandle() {
+    ctx.drawImage(candleImg, candle.x, candle.y, candle.width, candle.height);
+}
+
+function drawPipes() {
+    ctx.fillStyle = '#300';
+    pipes.forEach(pipe => {
+        // Top pipe
+        ctx.fillRect(pipe.x, 0, pipeWidth, pipe.y);
+        // Bottom pipe
+        ctx.fillRect(pipe.x, pipe.y + pipeGap, pipeWidth, canvas.height);
+    });
+}
+
+function updatePipes() {
+    pipes.forEach(pipe => {
+        pipe.x -= 2;
+
+        if (pipe.x + pipeWidth < 0) {
+            pipe.x = canvas.width;
+            pipe.y = Math.floor(Math.random() * 200) + 50;
+        }
+
+        // Collision detection
+        if (
+            candle.x < pipe.x + pipeWidth &&
+            candle.x + candle.width > pipe.x &&
+            (candle.y < pipe.y || candle.y + candle.height > pipe.y + pipeGap)
+        ) {
+            alert('Game Over 🕯️');
+            initGame();
+        }
+    });
+}
+
+function gameLoop() {
+    candle.velocity += gravity;
+    candle.y += candle.velocity;
+
+    if (candle.y + candle.height > canvas.height || candle.y < 0) {
+        alert('Game Over 🕯️');
+        initGame();
+        return;
+    }
+
+    drawBackground();
+    drawPipes();
+    drawCandle();
+    updatePipes();
+
+    requestAnimationFrame(gameLoop);
+}
