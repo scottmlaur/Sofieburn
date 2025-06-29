@@ -4,96 +4,128 @@ const ctx = canvas.getContext('2d');
 canvas.width = 800;
 canvas.height = 600;
 
-const GRAVITY = 0.4;
-let birdY = canvas.height / 2;
-let birdVelocity = 0;
-
+// Load assets
 const background = new Image();
 background.src = 'assets/backgrounds/sanctuary_bg.png';
 
-const bird = new Image();
-bird.src = 'assets/characters/candle.png';
+const candle = new Image();
+candle.src = 'assets/characters/candle.png';
 
-const pipeImage = new Image();
-pipeImage.src = 'assets/obstacles/pipe.png';
+const pipeImg = new Image();
+pipeImg.src = 'assets/obstacles/pipe.png';
 
+// Candle physics
+let candleY = 250;
+let candleVelocity = 0;
+const gravity = 0.6;
+const lift = -10;
+
+// Pipe setup
 let pipes = [];
-const PIPE_WIDTH = 80;
-const PIPE_GAP = 150;
-const PIPE_SPACING = 300;
-const PIPE_SPEED = 2;
+const pipeGap = 150;
+const pipeWidth = 60;
+const pipeSpacing = 200;
+const scrollSpeed = 2;
 
-// Generate initial pipes
-for (let i = 0; i < 3; i++) {
-  const topHeight = Math.floor(Math.random() * (canvas.height - PIPE_GAP - 100)) + 50;
-  pipes.push({ x: canvas.width + i * PIPE_SPACING, top: topHeight });
+// Background scroll
+let bgX = 0;
+
+// Input
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Space') {
+    candleVelocity = lift;
+  }
+});
+
+// Spawn initial pipes
+function spawnPipes() {
+  for (let i = 0; i < 3; i++) {
+    const topPipeHeight = Math.floor(Math.random() * 200) + 50;
+    pipes.push({
+      x: canvas.width + i * pipeSpacing,
+      top: topPipeHeight,
+      bottom: topPipeHeight + pipeGap
+    });
+  }
 }
 
-function drawBackground() {
-  ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-}
+// Main loop
+function update() {
+  // Candle movement
+  candleVelocity += gravity;
+  candleY += candleVelocity;
 
-function drawBird() {
-  ctx.drawImage(bird, 100, birdY, 40, 40);
-}
+  // Background scroll
+  bgX -= scrollSpeed;
+  if (bgX <= -canvas.width) {
+    bgX = 0;
+  }
 
-function drawPipes() {
-  pipes.forEach(pipe => {
-    ctx.drawImage(pipeImage, pipe.x, 0, PIPE_WIDTH, pipe.top);
-    ctx.drawImage(pipeImage, pipe.x, pipe.top + PIPE_GAP, PIPE_WIDTH, canvas.height - pipe.top - PIPE_GAP);
-  });
-}
-
-function updatePipes() {
-  pipes.forEach(pipe => {
-    pipe.x -= PIPE_SPEED;
-
-    // Recycle pipe
-    if (pipe.x + PIPE_WIDTH < 0) {
-      pipe.x = canvas.width + PIPE_SPACING;
-      pipe.top = Math.floor(Math.random() * (canvas.height - PIPE_GAP - 100)) + 50;
-    }
-  });
-}
-
-function checkCollision() {
+  // Pipe movement
   for (let pipe of pipes) {
-    const withinPipeX = 100 + 40 > pipe.x && 100 < pipe.x + PIPE_WIDTH;
-    const hitsTop = birdY < pipe.top;
-    const hitsBottom = birdY + 40 > pipe.top + PIPE_GAP;
+    pipe.x -= scrollSpeed;
+  }
 
-    if (withinPipeX && (hitsTop || hitsBottom)) {
-      return true;
+  // Recycle pipes
+  if (pipes[0].x + pipeWidth < 0) {
+    pipes.shift();
+    const top = Math.floor(Math.random() * 200) + 50;
+    pipes.push({
+      x: pipes[pipes.length - 1].x + pipeSpacing,
+      top: top,
+      bottom: top + pipeGap
+    });
+  }
+
+  // Collision
+  for (let pipe of pipes) {
+    if (
+      100 < pipe.x + pipeWidth &&
+      100 + 40 > pipe.x &&
+      (candleY < pipe.top || candleY + 40 > pipe.bottom)
+    ) {
+      resetGame();
     }
   }
 
-  return birdY < 0 || birdY + 40 > canvas.height;
+  if (candleY > canvas.height || candleY < 0) {
+    resetGame();
+  }
 }
 
-function gameLoop() {
-  drawBackground();
+// Draw
+function draw() {
+  // Background
+  ctx.drawImage(background, bgX, 0, canvas.width, canvas.height);
+  ctx.drawImage(background, bgX + canvas.width, 0, canvas.width, canvas.height);
 
-  drawPipes();
-  drawBird();
-
-  birdVelocity += GRAVITY;
-  birdY += birdVelocity;
-
-  updatePipes();
-
-  if (checkCollision()) {
-    alert("Game Over 🕯️");
-    document.location.reload();
-    return;
+  // Pipes
+  for (let pipe of pipes) {
+    ctx.drawImage(pipeImg, pipe.x, 0, pipeWidth, pipe.top);
+    ctx.drawImage(pipeImg, pipe.x, pipe.bottom, pipeWidth, canvas.height - pipe.bottom);
   }
 
+  // Candle
+  ctx.drawImage(candle, 100, candleY, 40, 40);
+}
+
+// Game loop
+function gameLoop() {
+  update();
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  draw();
   requestAnimationFrame(gameLoop);
 }
 
-document.addEventListener('keydown', () => {
-  birdVelocity = -8;
-});
+function resetGame() {
+  candleY = 250;
+  candleVelocity = 0;
+  pipes = [];
+  spawnPipes();
+}
 
+// Init
 window.onload = () => {
+  spawnPipes();
   gameLoop();
 };
