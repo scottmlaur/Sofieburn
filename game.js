@@ -1,59 +1,65 @@
-function initGame() {
-  const container = document.getElementById('game-container');
-  container.innerHTML = ''; // Clear intro
+let canvas, ctx;
+let candleImage = new Image();
+let candleX = 100;
+let candleY = 200;
+let candleLoaded = false;
+let scrollSpeed = 2;
 
-  // Create canvas
-  const canvas = document.createElement('canvas');
+function startGame() {
+  canvas = document.getElementById('game-canvas');
+  ctx = canvas.getContext('2d');
+
+  // Set canvas size
   canvas.width = 800;
   canvas.height = 600;
-  canvas.style.display = 'block';
-  canvas.style.margin = '0 auto';
-  container.appendChild(canvas);
 
-  const ctx = canvas.getContext('2d');
-
-  // Load candle sprite (placeholder path)
-  const candle = new Image();
-  candle.src = 'assets/candle_idle.png'; // Replace with your actual asset
-
-  // Set initial position
-  let candleX = 100;
-  let candleY = 250;
-  let velocityY = 0;
-  const gravity = 0.5;
-  const lift = -10;
-
-  // Handle input
-  document.addEventListener('keydown', (e) => {
-    if (e.code === 'Space') {
-      velocityY = lift;
-    }
-  });
-
-  // Game loop
-  function gameLoop() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Update position
-    velocityY += gravity;
-    candleY += velocityY;
-
-    // Simple floor collision
-    if (candleY > canvas.height - 50) {
-      candleY = canvas.height - 50;
-      velocityY = 0;
-    }
-
-    // Draw sprite
-    ctx.drawImage(candle, candleX, candleY, 40, 40);
-
+  // Optional: load candle sprite
+  candleImage.src = 'assets/candle.png'; // Make sure this path is correct
+  candleImage.onload = () => {
+    candleLoaded = true;
     requestAnimationFrame(gameLoop);
-  }
+  };
 
-  candle.onload = () => {
-    gameLoop(); // Start loop after sprite loads
+  // If image fails, still start game
+  candleImage.onerror = () => {
+    console.warn('Candle sprite not found, using fallback.');
+    candleLoaded = false;
+    requestAnimationFrame(gameLoop);
   };
 }
 
-// Expose to intro.js
-window.initGame = initGame;
+function gameLoop() {
+  update();
+  draw();
+  requestAnimationFrame(gameLoop);
+}
+
+function update() {
+  candleX += scrollSpeed;
+
+  // Reset if off screen
+  if (candleX > canvas.width + 50) {
+    candleX = -50;
+  }
+}
+
+function draw() {
+  // Clear canvas
+  ctx.fillStyle = 'black';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  if (candleLoaded) {
+    ctx.drawImage(candleImage, candleX, candleY, 48, 64);
+  } else {
+    // fallback if candle image missing
+    ctx.fillStyle = 'white';
+    ctx.beginPath();
+    ctx.arc(candleX, candleY, 20, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Optional: Debug text
+  ctx.fillStyle = 'gray';
+  ctx.font = '16px monospace';
+  ctx.fillText('SofieBurn v1', 10, 20);
+}
