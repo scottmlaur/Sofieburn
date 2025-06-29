@@ -8,52 +8,42 @@
     body {
       background-color: #111;
       color: #fca396;
-      font-family: 'Courier New', Courier, monospace;
+      font-family: 'Courier New', monospace;
       text-align: center;
-      margin: 0;
       padding: 20px;
     }
 
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 20px;
-    }
-
     button {
+      margin-top: 10px;
       padding: 10px 20px;
-      font-size: 1rem;
       font-weight: bold;
+      background-color: #fff;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      background-color: #fff;
-      color: #000;
-      margin-bottom: 20px;
     }
 
     #introImage {
       max-width: 90%;
+      margin-top: 20px;
       border: 2px solid #fca396;
       padding: 10px;
-      margin-top: 10px;
     }
 
     #gameCanvas {
       display: none;
-      border: 2px solid #fca396;
-      margin-top: 20px;
       background-color: #000;
+      margin-top: 20px;
+      border: 2px solid #fca396;
     }
   </style>
 </head>
 <body>
 
   <h1>SofieBurn</h1>
-  <button onclick="initGame()">Light the Flame</button>
+  <button id="startButton">Light the Flame</button>
 
-  <div>
-    <img id="introImage" src="assets/intro.png" alt="Sofie Intro">
-  </div>
+  <img id="introImage" src="assets/intro.png" alt="Sofie Intro">
 
   <canvas id="gameCanvas" width="800" height="600"></canvas>
 
