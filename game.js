@@ -1,96 +1,121 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-const gravity = 0.6;
-const jump = -10;
+canvas.width = 800;
+canvas.height = 600;
 
-let candle = {
-    x: 150,
-    y: 150,
-    width: 30,
-    height: 30,
-    velocity: 0
-};
+const gravity = 0.5;
+const flapStrength = -10;
+let candleY = canvas.height / 2;
+let velocity = 0;
+let score = 0;
+let gameRunning = true;
 
-let pipes = [];
-let pipeGap = 140;
-let pipeWidth = 60;
-let pipeSpacing = 280;
+const backgroundImg = new Image();
+backgroundImg.src = 'assets/backgrounds/sanctuary_bg.png';
 
-let background = new Image();
-background.src = 'assets/backgrounds/sanctuary_bg.png';
-
-let candleImg = new Image();
+const candleImg = new Image();
 candleImg.src = 'assets/characters/candle.png';
 
-function drawBackground() {
-    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+const pipeWidth = 80;
+const pipeGap = 200;
+const pipeSpeed = 2;
+let pipes = [];
+
+function spawnPipe() {
+    const topPipeHeight = Math.floor(Math.random() * (canvas.height - pipeGap - 100)) + 50;
+    pipes.push({
+        x: canvas.width,
+        top: topPipeHeight,
+        bottom: topPipeHeight + pipeGap,
+    });
+}
+
+function resetGame() {
+    candleY = canvas.height / 2;
+    velocity = 0;
+    pipes = [];
+    score = 0;
+    spawnPipe();
+    gameRunning = true;
 }
 
 function drawCandle() {
-    ctx.drawImage(candleImg, candle.x, candle.y, candle.width, candle.height);
+    ctx.drawImage(candleImg, 100, candleY, 40, 60);
+}
+
+function drawBackground() {
+    ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
 }
 
 function drawPipes() {
-    ctx.fillStyle = '#300';
+    ctx.fillStyle = '#3c1e1e';
     pipes.forEach(pipe => {
-        ctx.fillRect(pipe.x, 0, pipeWidth, pipe.y); // Top
-        ctx.fillRect(pipe.x, pipe.y + pipeGap, pipeWidth, canvas.height); // Bottom
+        ctx.fillRect(pipe.x, 0, pipeWidth, pipe.top);
+        ctx.fillRect(pipe.x, pipe.bottom, pipeWidth, canvas.height - pipe.bottom);
     });
 }
 
 function updatePipes() {
     pipes.forEach(pipe => {
-        pipe.x -= 2;
-
-        if (pipe.x + pipeWidth < 0) {
-            pipe.x = canvas.width;
-            pipe.y = Math.floor(Math.random() * 200) + 50;
-        }
-
-        if (
-            candle.x < pipe.x + pipeWidth &&
-            candle.x + candle.width > pipe.x &&
-            (candle.y < pipe.y || candle.y + candle.height > pipe.y + pipeGap)
-        ) {
-            alert('Game Over 🕯️');
-            initGame();
-        }
+        pipe.x -= pipeSpeed;
     });
+
+    // Remove offscreen pipes
+    if (pipes.length && pipes[0].x + pipeWidth < 0) {
+        pipes.shift();
+        score++;
+    }
+
+    // Add new pipe
+    const lastPipe = pipes[pipes.length - 1];
+    if (lastPipe && lastPipe.x < canvas.width - 300) {
+        spawnPipe();
+    }
+}
+
+function checkCollision() {
+    for (const pipe of pipes) {
+        if (
+            100 + 40 > pipe.x &&
+            100 < pipe.x + pipeWidth &&
+            (candleY < pipe.top || candleY + 60 > pipe.bottom)
+        ) {
+            gameRunning = false;
+            setTimeout(() => alert(`Game Over 🕯️`), 100);
+        }
+    }
+
+    if (candleY + 60 > canvas.height || candleY < 0) {
+        gameRunning = false;
+        setTimeout(() => alert(`Game Over 🕯️`), 100);
+    }
 }
 
 function gameLoop() {
-    candle.velocity += gravity;
-    candle.y += candle.velocity;
+    if (!gameRunning) return;
 
-    if (candle.y + candle.height > canvas.height || candle.y < 0) {
-        alert('Game Over 🕯️');
-        initGame();
-        return;
-    }
-
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBackground();
     drawPipes();
     drawCandle();
+
+    velocity += gravity;
+    candleY += velocity;
+
     updatePipes();
+    checkCollision();
 
     requestAnimationFrame(gameLoop);
 }
 
-function initGame() {
-    pipes = [];
-    for (let i = 0; i < 3; i++) {
-        let pipeX = canvas.width + i * pipeSpacing;
-        let pipeY = Math.floor(Math.random() * 200) + 50;
-        pipes.push({ x: pipeX, y: pipeY });
+document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space') {
+        velocity = flapStrength;
     }
+});
 
-    candle.y = 150;
-    candle.velocity = 0;
-
-    document.addEventListener('keydown', () => {
-        candle.velocity = jump;
-    });
-
-    requestAnimationFrame(gameLoop);
+function initGame() {
+    resetGame();
+    gameLoop();
 }
