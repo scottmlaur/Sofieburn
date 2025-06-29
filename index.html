@@ -4,81 +4,53 @@
   <meta charset="UTF-8">
   <title>SofieBurn</title>
   <style>
-    html, body {
+    body {
       margin: 0;
-      padding: 0;
       background-color: #111;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
       color: white;
-      font-family: sans-serif;
-      overflow: hidden;
-      height: 100%;
-      width: 100%;
+      font-family: Arial, sans-serif;
     }
 
     #intro {
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-      height: 100vh;
+      gap: 20px;
     }
 
     #intro img {
-      max-width: 90%;
+      max-width: 100%;
       height: auto;
-      margin-bottom: 20px;
     }
 
-    #startButton {
+    #start-button {
       padding: 10px 20px;
       background-color: #222;
       color: white;
-      border: 1px solid #555;
-      font-size: 16px;
+      border: 1px solid white;
       cursor: pointer;
+      font-size: 16px;
     }
 
-    #gameContainer {
+    canvas {
       display: none;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      width: 100vw;
-    }
-
-    #gameCanvas {
-      background-color: black;
       border: 1px solid orange;
     }
   </style>
 </head>
 <body>
   <div id="intro">
-    <img src="assets/images/sofie_intro.png" alt="Sofie holding candle">
-    <button id="startButton">Start Game</button>
+    <img src="assets/sofie_intro.png" alt="Sofie holding candle">
+    <button id="start-button">Start Game</button>
   </div>
 
-  <div id="gameContainer">
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
-  </div>
+  <canvas id="gameCanvas" width="800" height="600"></canvas>
 
-  <script>
-    const startButton = document.getElementById('startButton');
-    const intro = document.getElementById('intro');
-    const gameContainer = document.getElementById('gameContainer');
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-
-    startButton.addEventListener('click', () => {
-      intro.style.display = 'none';
-      gameContainer.style.display = 'flex';
-
-      // TEMP TEST: Draw red square
-      ctx.fillStyle = 'red';
-      ctx.fillRect(50, 50, 50, 50);
-
-      // TODO: Hook up actual game.js logic here
-    });
-  </script>
+  <script src="game.js"></script>
 </body>
 </html>
