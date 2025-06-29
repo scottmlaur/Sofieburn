@@ -1,71 +1,42 @@
-/* intro.css — Cold Breath Edition */
+// intro.js
 
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+// Create container
+const container = document.getElementById('game-container');
+container.innerHTML = ''; // Clear anything just in case
 
-body {
-  margin: 0;
-  background-color: #000;
-  color: #f97;
-  font-family: 'Press Start 2P', monospace;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
+// Create intro image
+const introImage = document.createElement('img');
+introImage.src = 'assets/sofie_intro.png';
+introImage.alt = 'Sofie holding candle';
+introImage.style.maxWidth = '100%';
+introImage.style.height = 'auto';
+introImage.style.display = 'block';
+introImage.style.margin = '0 auto';
 
-#intro-screen {
-  text-align: center;
-  animation: fadeIn 2s ease-out;
-}
+// Create start button
+const startButton = document.createElement('button');
+startButton.textContent = 'Start Game';
+startButton.style.display = 'block';
+startButton.style.margin = '20px auto';
+startButton.style.padding = '10px 20px';
+startButton.style.fontFamily = 'monospace';
+startButton.style.fontSize = '1rem';
+startButton.style.background = '#111';
+startButton.style.color = '#fff';
+startButton.style.border = '1px solid #444';
+startButton.style.borderRadius = '5px';
+startButton.style.cursor = 'pointer';
 
-#sofie-pixel {
-  width: 200px;
-  margin-bottom: 20px;
-  opacity: 0;
-  animation: 
-    fadeInSofie 3s ease-out forwards,
-    flicker 1.8s infinite;
-}
-
-h1 {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-#subtitle {
-  font-size: 12px;
-  color: #aaa;
-  margin-bottom: 40px;
-}
-
-button {
-  font-family: 'Press Start 2P', monospace;
-  background-color: #111;
-  color: #f97;
-  border: 2px solid #f97;
-  padding: 12px 24px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #222;
-}
-
-@keyframes fadeInSofie {
-  0% {
-    opacity: 0;
-    transform: translateY(10px) scale(0.95);
+// Add click handler
+startButton.addEventListener('click', () => {
+  if (typeof initGame === 'function') {
+    container.innerHTML = ''; // Clear intro screen
+    initGame();               // Call main game entry point
+  } else {
+    console.error('initGame() not defined');
   }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
+});
 
-@keyframes flicker {
-  0%, 100% { filter: brightness(1); }
-  45% { filter: brightness(1.1); }
-  50% { filter: brightness(0.9); }
-  55% { filter: brightness(1.15); }
-  70% { filter: brightness(1); }
-}
+// Append to DOM
+container.appendChild(introImage);
+container.appendChild(startButton);
