@@ -7,7 +7,6 @@ let x = 50;
 let y = 50;
 let dx = 2;
 let squareSize = 50;
-let animationFrame;
 
 startButton.addEventListener("click", () => {
   introScreen.style.display = "none";
@@ -27,7 +26,7 @@ function startGame() {
       dx = -dx;
     }
 
-    animationFrame = requestAnimationFrame(draw);
+    requestAnimationFrame(draw);
   }
 
   draw();
