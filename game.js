@@ -3,8 +3,14 @@ window.addEventListener("DOMContentLoaded", () => {
 
   const startButton = document.getElementById("startButton");
   const canvas = document.getElementById("gameCanvas");
-  const ctx = canvas.getContext("2d");
   const introImage = document.getElementById("introImage");
+
+  if (!startButton || !canvas || !introImage) {
+    console.error("❌ Missing elements in DOM. Check your HTML IDs.");
+    return;
+  }
+
+  const ctx = canvas.getContext("2d");
 
   const background = new Image();
   background.src = "assets/backgrounds/hallway.png";
