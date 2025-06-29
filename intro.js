@@ -1,35 +1,22 @@
-window.onload = function () {
-  const introContainer = document.createElement('div');
-  introContainer.id = 'intro';
-  introContainer.style.display = 'flex';
-  introContainer.style.flexDirection = 'column';
-  introContainer.style.alignItems = 'center';
-  introContainer.style.justifyContent = 'center';
-  introContainer.style.height = '100vh';
-  introContainer.style.backgroundColor = '#000';
+// intro.js
 
-  const candle = document.createElement('img');
-  candle.src = 'assets/sofie_intro.png';
-  candle.alt = 'Candle';
-  candle.style.width = '64px';
-  candle.style.height = '64px';
-  candle.style.marginBottom = '20px';
+document.addEventListener('DOMContentLoaded', () => {
+  const startBtn = document.getElementById('start-btn');
+  const introScreen = document.getElementById('intro-screen');
+  const gameCanvas = document.getElementById('gameCanvas');
 
-  const startButton = document.createElement('button');
-  startButton.innerText = 'Start Game';
-  startButton.id = 'start-btn';
-  startButton.style.padding = '10px 20px';
-  startButton.style.fontSize = '16px';
-  startButton.style.cursor = 'pointer';
+  startBtn.addEventListener('click', () => {
+    // Hide intro screen
+    introScreen.style.display = 'none';
 
-  introContainer.appendChild(candle);
-  introContainer.appendChild(startButton);
-  document.body.appendChild(introContainer);
+    // Show game canvas
+    gameCanvas.style.display = 'block';
 
-  startButton.addEventListener('click', () => {
-    introContainer.remove();
-    const script = document.createElement('script');
-    script.src = 'game.js';
-    document.body.appendChild(script);
+    // Start the game
+    if (typeof window.initGame === 'function') {
+      window.initGame();
+    } else {
+      console.error('initGame() not found. Make sure main.js exposes it globally.');
+    }
   });
-};
+});
