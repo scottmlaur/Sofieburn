@@ -6,52 +6,57 @@
   <title>SofieBurn</title>
   <style>
     body {
+      margin: 0;
       background-color: #111;
-      color: #fca794;
+      color: #f9a48d;
       font-family: 'Courier New', Courier, monospace;
       text-align: center;
-      margin: 0;
-      padding: 0;
     }
 
     h1 {
-      margin-top: 60px;
+      margin-top: 50px;
       font-size: 2.5rem;
     }
 
-    #startButton {
-      margin: 20px auto;
+    #startBtn {
+      margin: 20px;
       padding: 10px 20px;
-      font-size: 16px;
       font-weight: bold;
       border: none;
-      border-radius: 4px;
+      border-radius: 5px;
+      background-color: #fff;
+      color: #111;
       cursor: pointer;
     }
 
-    #gameCanvas {
-      display: block;
-      margin: 30px auto;
+    #gameContainer {
+      margin: 20px auto;
+      border: 2px solid #f9a48d;
+      width: 800px;
+      height: 600px;
       background-color: #111;
-      border: 2px solid #fca794;
+      position: relative;
+    }
+
+    #introImage {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 90%;
+      max-height: 90%;
     }
   </style>
 </head>
 <body>
   <h1>SofieBurn</h1>
-  <button id="startButton">Light the Flame</button>
-  <canvas id="gameCanvas" width="800" height="600"></canvas>
+  <button id="startBtn" onclick="initGame()">Light the Flame</button>
+  
+  <div id="gameContainer">
+    <img id="introImage" src="assets/intro.png" alt="Sofie Intro">
+    <canvas id="gameCanvas" width="800" height="600" style="display: none;"></canvas>
+  </div>
 
   <script src="game.js"></script>
-  <script>
-    document.getElementById("startButton").addEventListener("click", () => {
-      const canvas = document.getElementById("gameCanvas");
-      if (typeof initGame === "function") {
-        initGame(canvas);
-      } else {
-        console.error("initGame is not defined!");
-      }
-    });
-  </script>
 </body>
 </html>
