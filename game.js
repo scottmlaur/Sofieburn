@@ -1,65 +1,134 @@
-let canvas, ctx;
-let candleImage = new Image();
-let candleX = 100;
-let candleY = 200;
-let candleLoaded = false;
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+// Canvas size
+canvas.width = 800;
+canvas.height = 600;
+
+// Load candle sprite
+const candleImg = new Image();
+candleImg.src = "assets/sprites/candle.png"; // Adjust if path is different
+
+// Game state
+let gameRunning = false;
 let scrollSpeed = 2;
+let gravity = 0.5;
+let jumpForce = -10;
+let frameCount = 0;
 
-function startGame() {
-  canvas = document.getElementById('game-canvas');
-  ctx = canvas.getContext('2d');
+// Candle (player)
+let candle = {
+  x: 150,
+  y: 250,
+  width: 48,
+  height: 48,
+  velocity: 0
+};
 
-  // Set canvas size
-  canvas.width = 800;
-  canvas.height = 600;
+// Pipes
+let pipes = [];
+let pipeWidth = 80;
+let pipeGap = 160;
+let pipeSpawnRate = 120; // frames
 
-  // Optional: load candle sprite
-  candleImage.src = 'assets/candle.png'; // Make sure this path is correct
-  candleImage.onload = () => {
-    candleLoaded = true;
-    requestAnimationFrame(gameLoop);
-  };
+// Load level config
+let level = {
+  scrollSpeed: 2,
+  gravity: 0.5,
+  candle: { x: 150, y: 250 },
+  pipe: { gap: 160, width: 80, spawnRate: 120 },
+  finishLine: 4000
+};
 
-  // If image fails, still start game
-  candleImage.onerror = () => {
-    console.warn('Candle sprite not found, using fallback.');
-    candleLoaded = false;
-    requestAnimationFrame(gameLoop);
-  };
+function resetGame() {
+  scrollSpeed = level.scrollSpeed;
+  gravity = level.gravity;
+  candle.x = level.candle.x;
+  candle.y = level.candle.y;
+  candle.velocity = 0;
+  pipes = [];
+  frameCount = 0;
+  gameRunning = true;
 }
 
-function gameLoop() {
-  update();
-  draw();
-  requestAnimationFrame(gameLoop);
+function drawCandle() {
+  ctx.drawImage(candleImg, candle.x, candle.y, candle.width, candle.height);
 }
 
-function update() {
-  candleX += scrollSpeed;
+function drawPipes() {
+  ctx.fillStyle = "green";
+  for (const pipe of pipes) {
+    ctx.fillRect(pipe.x, 0, pipeWidth, pipe.top);
+    ctx.fillRect(pipe.x, pipe.top + pipeGap, pipeWidth, canvas.height - pipe.top - pipeGap);
+  }
+}
 
-  // Reset if off screen
-  if (candleX > canvas.width + 50) {
-    candleX = -50;
+function updateCandle() {
+  candle.velocity += gravity;
+  candle.y += candle.velocity;
+
+  if (candle.y + candle.height > canvas.height) {
+    gameOver();
+  }
+}
+
+function updatePipes() {
+  for (let pipe of pipes) {
+    pipe.x -= scrollSpeed;
+    if (
+      candle.x < pipe.x + pipeWidth &&
+      candle.x + candle.width > pipe.x &&
+      (candle.y < pipe.top || candle.y + candle.height > pipe.top + pipeGap)
+    ) {
+      gameOver();
+    }
+  }
+
+  pipes = pipes.filter(pipe => pipe.x + pipeWidth > 0);
+
+  if (frameCount % pipeSpawnRate === 0) {
+    const top = Math.floor(Math.random() * (canvas.height - pipeGap - 100)) + 50;
+    pipes.push({ x: canvas.width, top: top });
   }
 }
 
 function draw() {
-  // Clear canvas
-  ctx.fillStyle = 'black';
+  ctx.fillStyle = "#111";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  if (candleLoaded) {
-    ctx.drawImage(candleImage, candleX, candleY, 48, 64);
-  } else {
-    // fallback if candle image missing
-    ctx.fillStyle = 'white';
-    ctx.beginPath();
-    ctx.arc(candleX, candleY, 20, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  // Optional: Debug text
-  ctx.fillStyle = 'gray';
-  ctx.font = '16px monospace';
-  ctx.fillText('SofieBurn v1', 10, 20);
+  drawPipes();
+  drawCandle();
 }
+
+function update() {
+  updateCandle();
+  updatePipes();
+
+  if (frameCount * scrollSpeed > level.finishLine) {
+    gameOver(true);
+  }
+}
+
+function loop() {
+  if (!gameRunning) return;
+  frameCount++;
+  update();
+  draw();
+  requestAnimationFrame(loop);
+}
+
+function gameOver(won = false) {
+  gameRunning = false;
+  alert(won ? "🔥 You reached the end!" : "💀 Candle extinguished. Try again.");
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.code === "Space" || e.code === "ArrowUp") {
+    candle.velocity = jumpForce;
+  }
+});
+
+document.getElementById("startBtn").addEventListener("click", () => {
+  resetGame();
+  loop();
+});
