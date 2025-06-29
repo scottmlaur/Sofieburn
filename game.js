@@ -4,118 +4,96 @@ const ctx = canvas.getContext('2d');
 canvas.width = 800;
 canvas.height = 600;
 
-const gravity = 0.5;
-const flapStrength = -10;
-let candleY = canvas.height / 2;
-let velocity = 0;
-let score = 0;
-let gameRunning = true;
+const GRAVITY = 0.4;
+let birdY = canvas.height / 2;
+let birdVelocity = 0;
 
-const backgroundImg = new Image();
-backgroundImg.src = 'assets/backgrounds/sanctuary_bg.png';
+const background = new Image();
+background.src = 'assets/backgrounds/sanctuary_bg.png';
 
-const candleImg = new Image();
-candleImg.src = 'assets/characters/candle.png';
+const bird = new Image();
+bird.src = 'assets/characters/candle.png';
 
-const pipeWidth = 80;
-const pipeGap = 200;
-const pipeSpeed = 2;
+const pipeImage = new Image();
+pipeImage.src = 'assets/obstacles/pipe.png';
+
 let pipes = [];
+const PIPE_WIDTH = 80;
+const PIPE_GAP = 150;
+const PIPE_SPACING = 300;
+const PIPE_SPEED = 2;
 
-function spawnPipe() {
-    const topPipeHeight = Math.floor(Math.random() * (canvas.height - pipeGap - 100)) + 50;
-    pipes.push({
-        x: canvas.width,
-        top: topPipeHeight,
-        bottom: topPipeHeight + pipeGap,
-    });
-}
-
-function resetGame() {
-    candleY = canvas.height / 2;
-    velocity = 0;
-    pipes = [];
-    score = 0;
-    spawnPipe();
-    gameRunning = true;
-}
-
-function drawCandle() {
-    ctx.drawImage(candleImg, 100, candleY, 40, 60);
+// Generate initial pipes
+for (let i = 0; i < 3; i++) {
+  const topHeight = Math.floor(Math.random() * (canvas.height - PIPE_GAP - 100)) + 50;
+  pipes.push({ x: canvas.width + i * PIPE_SPACING, top: topHeight });
 }
 
 function drawBackground() {
-    ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
+  ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+}
+
+function drawBird() {
+  ctx.drawImage(bird, 100, birdY, 40, 40);
 }
 
 function drawPipes() {
-    ctx.fillStyle = '#3c1e1e';
-    pipes.forEach(pipe => {
-        ctx.fillRect(pipe.x, 0, pipeWidth, pipe.top);
-        ctx.fillRect(pipe.x, pipe.bottom, pipeWidth, canvas.height - pipe.bottom);
-    });
+  pipes.forEach(pipe => {
+    ctx.drawImage(pipeImage, pipe.x, 0, PIPE_WIDTH, pipe.top);
+    ctx.drawImage(pipeImage, pipe.x, pipe.top + PIPE_GAP, PIPE_WIDTH, canvas.height - pipe.top - PIPE_GAP);
+  });
 }
 
 function updatePipes() {
-    pipes.forEach(pipe => {
-        pipe.x -= pipeSpeed;
-    });
+  pipes.forEach(pipe => {
+    pipe.x -= PIPE_SPEED;
 
-    // Remove offscreen pipes
-    if (pipes.length && pipes[0].x + pipeWidth < 0) {
-        pipes.shift();
-        score++;
+    // Recycle pipe
+    if (pipe.x + PIPE_WIDTH < 0) {
+      pipe.x = canvas.width + PIPE_SPACING;
+      pipe.top = Math.floor(Math.random() * (canvas.height - PIPE_GAP - 100)) + 50;
     }
-
-    // Add new pipe
-    const lastPipe = pipes[pipes.length - 1];
-    if (lastPipe && lastPipe.x < canvas.width - 300) {
-        spawnPipe();
-    }
+  });
 }
 
 function checkCollision() {
-    for (const pipe of pipes) {
-        if (
-            100 + 40 > pipe.x &&
-            100 < pipe.x + pipeWidth &&
-            (candleY < pipe.top || candleY + 60 > pipe.bottom)
-        ) {
-            gameRunning = false;
-            setTimeout(() => alert(`Game Over 🕯️`), 100);
-        }
-    }
+  for (let pipe of pipes) {
+    const withinPipeX = 100 + 40 > pipe.x && 100 < pipe.x + PIPE_WIDTH;
+    const hitsTop = birdY < pipe.top;
+    const hitsBottom = birdY + 40 > pipe.top + PIPE_GAP;
 
-    if (candleY + 60 > canvas.height || candleY < 0) {
-        gameRunning = false;
-        setTimeout(() => alert(`Game Over 🕯️`), 100);
+    if (withinPipeX && (hitsTop || hitsBottom)) {
+      return true;
     }
+  }
+
+  return birdY < 0 || birdY + 40 > canvas.height;
 }
 
 function gameLoop() {
-    if (!gameRunning) return;
+  drawBackground();
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawBackground();
-    drawPipes();
-    drawCandle();
+  drawPipes();
+  drawBird();
 
-    velocity += gravity;
-    candleY += velocity;
+  birdVelocity += GRAVITY;
+  birdY += birdVelocity;
 
-    updatePipes();
-    checkCollision();
+  updatePipes();
 
-    requestAnimationFrame(gameLoop);
+  if (checkCollision()) {
+    alert("Game Over 🕯️");
+    document.location.reload();
+    return;
+  }
+
+  requestAnimationFrame(gameLoop);
 }
 
-document.addEventListener('keydown', (e) => {
-    if (e.code === 'Space') {
-        velocity = flapStrength;
-    }
+document.addEventListener('keydown', () => {
+  birdVelocity = -8;
 });
 
-function initGame() {
-    resetGame();
-    gameLoop();
-}
+window.onload = () => {
+  gameLoop();
+};
