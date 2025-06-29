@@ -23,24 +23,6 @@ background.src = 'assets/backgrounds/sanctuary_bg.png';
 let candleImg = new Image();
 candleImg.src = 'assets/characters/candle.png';
 
-function initGame() {
-    pipes = [];
-    for (let i = 0; i < 3; i++) {
-        let pipeX = canvas.width + i * pipeSpacing;
-        let pipeY = Math.floor(Math.random() * 200) + 50;
-        pipes.push({ x: pipeX, y: pipeY });
-    }
-
-    candle.y = 150;
-    candle.velocity = 0;
-
-    document.addEventListener('keydown', () => {
-        candle.velocity = jump;
-    });
-
-    requestAnimationFrame(gameLoop);
-}
-
 function drawBackground() {
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 }
@@ -52,10 +34,8 @@ function drawCandle() {
 function drawPipes() {
     ctx.fillStyle = '#300';
     pipes.forEach(pipe => {
-        // Top pipe
-        ctx.fillRect(pipe.x, 0, pipeWidth, pipe.y);
-        // Bottom pipe
-        ctx.fillRect(pipe.x, pipe.y + pipeGap, pipeWidth, canvas.height);
+        ctx.fillRect(pipe.x, 0, pipeWidth, pipe.y); // Top
+        ctx.fillRect(pipe.x, pipe.y + pipeGap, pipeWidth, canvas.height); // Bottom
     });
 }
 
@@ -68,7 +48,6 @@ function updatePipes() {
             pipe.y = Math.floor(Math.random() * 200) + 50;
         }
 
-        // Collision detection
         if (
             candle.x < pipe.x + pipeWidth &&
             candle.x + candle.width > pipe.x &&
@@ -94,6 +73,24 @@ function gameLoop() {
     drawPipes();
     drawCandle();
     updatePipes();
+
+    requestAnimationFrame(gameLoop);
+}
+
+function initGame() {
+    pipes = [];
+    for (let i = 0; i < 3; i++) {
+        let pipeX = canvas.width + i * pipeSpacing;
+        let pipeY = Math.floor(Math.random() * 200) + 50;
+        pipes.push({ x: pipeX, y: pipeY });
+    }
+
+    candle.y = 150;
+    candle.velocity = 0;
+
+    document.addEventListener('keydown', () => {
+        candle.velocity = jump;
+    });
 
     requestAnimationFrame(gameLoop);
 }
