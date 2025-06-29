@@ -1,22 +1,19 @@
-// intro.js
-
 document.addEventListener('DOMContentLoaded', () => {
-  const startBtn = document.getElementById('start-btn');
+  const startButton = document.getElementById('start-btn');
   const introScreen = document.getElementById('intro-screen');
-  const gameCanvas = document.getElementById('gameCanvas');
 
-  startBtn.addEventListener('click', () => {
-    // Hide intro screen
-    introScreen.style.display = 'none';
+  if (startButton && introScreen) {
+    startButton.addEventListener('click', () => {
+      introScreen.style.display = 'none';
 
-    // Show game canvas
-    gameCanvas.style.display = 'block';
-
-    // Start the game
-    if (typeof window.initGame === 'function') {
-      window.initGame();
-    } else {
-      console.error('initGame() not found. Make sure main.js exposes it globally.');
-    }
-  });
+      // Call the game start logic (this must be defined in main.js or game.js)
+      if (typeof startGame === 'function') {
+        startGame();
+      } else {
+        console.warn('startGame() is not defined.');
+      }
+    });
+  } else {
+    console.error('Intro screen or start button not found.');
+  }
 });
