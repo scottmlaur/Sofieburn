@@ -1,42 +1,43 @@
-// intro.js
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-// Create container
-const container = document.getElementById('game-container');
-container.innerHTML = ''; // Clear anything just in case
+html, body {
+  height: 100%;
+  background-color: #111;
+  font-family: monospace;
+  color: white;
+}
 
-// Create intro image
-const introImage = document.createElement('img');
-introImage.src = 'assets/sofie_intro.png';
-introImage.alt = 'Sofie holding candle';
-introImage.style.maxWidth = '100%';
-introImage.style.height = 'auto';
-introImage.style.display = 'block';
-introImage.style.margin = '0 auto';
+#intro-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 20px;
+}
 
-// Create start button
-const startButton = document.createElement('button');
-startButton.textContent = 'Start Game';
-startButton.style.display = 'block';
-startButton.style.margin = '20px auto';
-startButton.style.padding = '10px 20px';
-startButton.style.fontFamily = 'monospace';
-startButton.style.fontSize = '1rem';
-startButton.style.background = '#111';
-startButton.style.color = '#fff';
-startButton.style.border = '1px solid #444';
-startButton.style.borderRadius = '5px';
-startButton.style.cursor = 'pointer';
+#intro-image {
+  max-width: 300px;
+  height: auto;
+  border: 2px solid #333;
+  border-radius: 10px;
+}
 
-// Add click handler
-startButton.addEventListener('click', () => {
-  if (typeof initGame === 'function') {
-    container.innerHTML = ''; // Clear intro screen
-    initGame();               // Call main game entry point
-  } else {
-    console.error('initGame() not defined');
-  }
-});
+#start-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #222;
+  color: white;
+  border: 1px solid #555;
+  border-radius: 6px;
+  cursor: pointer;
+}
 
-// Append to DOM
-container.appendChild(introImage);
-container.appendChild(startButton);
+#start-btn:hover {
+  background-color: #444;
+}
