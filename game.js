@@ -1,124 +1,148 @@
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
 
-let candle = {
-  x: 150,
+// === Candle Player ===
+const candle = {
+  x: 100,
   y: 200,
   width: 32,
   height: 32,
   velocity: 0,
-  gravity: 0.6,
-  lift: -10,
-  img: null
+  gravity: 0.5,
+  jumpStrength: -9,
+  img: null,
 };
 
+// === Pipes ===
 let pipes = [];
-let pipeGap = 140;
-let pipeWidth = 50;
-let pipeSpeed = 2;
+const pipeGap = 150;
+const pipeWidth = 50;
+const pipeSpeed = 2;
 
+// === Game Control ===
 let gameRunning = false;
 
-function initGame() {
-  loadAssets(() => {
-    setup();
-    gameRunning = true;
-    requestAnimationFrame(update);
-  });
-}
-
+// === Load Candle Sprite ===
 function loadAssets(callback) {
   const img = new Image();
-  img.src = 'assets/characters/candle.png'; // Replace if you use a different path
+  img.src = "assets/characters/candle.png"; // Adjust path if needed
   img.onload = () => {
     candle.img = img;
     callback();
   };
+  img.onerror = () => {
+    console.warn("Could not load candle sprite. Using fallback.");
+    callback();
+  };
 }
 
-function setup() {
-  pipes = [];
-  candle.y = canvas.height / 2;
-  candle.velocity = 0;
-  createPipe();
-}
-
-function createPipe() {
-  const top = Math.random() * (canvas.height - pipeGap - 100) + 50;
-  pipes.push({
-    x: canvas.width,
-    top,
-    bottom: top + pipeGap
+// === Initialize Game ===
+function initGame() {
+  loadAssets(() => {
+    setupGame();
+    gameRunning = true;
+    requestAnimationFrame(gameLoop);
   });
 }
 
-function update() {
+// === Setup ===
+function setupGame() {
+  candle.y = canvas.height / 2;
+  candle.velocity = 0;
+  pipes = [];
+  addPipe();
+}
+
+// === Add Pipe ===
+function addPipe() {
+  const topHeight = Math.random() * (canvas.height - pipeGap - 100) + 50;
+  pipes.push({
+    x: canvas.width,
+    top: topHeight,
+    bottom: topHeight + pipeGap,
+  });
+}
+
+// === Game Loop ===
+function gameLoop() {
   if (!gameRunning) return;
 
-  // Clear
-  ctx.fillStyle = "#0f0f0f";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  update();
+  draw();
+  requestAnimationFrame(gameLoop);
+}
 
+// === Update Logic ===
+function update() {
   // Candle physics
   candle.velocity += candle.gravity;
   candle.y += candle.velocity;
 
-  // Draw candle
-  if (candle.img) {
-    ctx.drawImage(candle.img, candle.x, candle.y, candle.width, candle.height);
-  } else {
-    ctx.fillStyle = "#ffcc00";
-    ctx.fillRect(candle.x, candle.y, candle.width, candle.height);
-  }
-
-  // Move pipes
+  // Pipe movement
   for (let i = 0; i < pipes.length; i++) {
-    let p = pipes[i];
-    p.x -= pipeSpeed;
-
-    ctx.fillStyle = "#8b3a3a";
-    ctx.fillRect(p.x, 0, pipeWidth, p.top);
-    ctx.fillRect(p.x, p.bottom, pipeWidth, canvas.height - p.bottom);
+    pipes[i].x -= pipeSpeed;
 
     // Collision
     if (
-      candle.x < p.x + pipeWidth &&
-      candle.x + candle.width > p.x &&
-      (candle.y < p.top || candle.y + candle.height > p.bottom)
+      candle.x < pipes[i].x + pipeWidth &&
+      candle.x + candle.width > pipes[i].x &&
+      (candle.y < pipes[i].top || candle.y + candle.height > pipes[i].bottom)
     ) {
-      gameOver();
+      return endGame();
     }
 
-    if (p.x + pipeWidth < 0) {
+    // Remove pipe and add new
+    if (pipes[i].x + pipeWidth < 0) {
       pipes.splice(i, 1);
       i--;
-      createPipe();
+      addPipe();
     }
   }
 
-  // Boundary collision
-  if (candle.y < 0 || candle.y + candle.height > canvas.height) {
-    gameOver();
+  // Canvas bounds
+  if (candle.y + candle.height > canvas.height || candle.y < 0) {
+    return endGame();
   }
-
-  requestAnimationFrame(update);
 }
 
-function gameOver() {
+// === Draw Everything ===
+function draw() {
+  // Background
+  ctx.fillStyle = "#0f0f0f";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Pipes
+  ctx.fillStyle = "#663333";
+  for (let pipe of pipes) {
+    ctx.fillRect(pipe.x, 0, pipeWidth, pipe.top);
+    ctx.fillRect(pipe.x, pipe.bottom, pipeWidth, canvas.height - pipe.bottom);
+  }
+
+  // Candle
+  if (candle.img) {
+    ctx.drawImage(candle.img, candle.x, candle.y, candle.width, candle.height);
+  } else {
+    ctx.fillStyle = "#ffaa00";
+    ctx.fillRect(candle.x, candle.y, candle.width, candle.height);
+  }
+}
+
+// === Jump ===
+function flap() {
+  if (!gameRunning) return;
+  candle.velocity = candle.jumpStrength;
+}
+
+window.addEventListener("keydown", (e) => {
+  if (e.code === "Space") flap();
+});
+window.addEventListener("click", flap);
+
+// === End Game ===
+function endGame() {
   gameRunning = false;
   alert("Game over 🕯️");
 }
 
-function flap() {
-  if (gameRunning) {
-    candle.velocity = candle.lift;
-  }
-}
-
-window.addEventListener('keydown', (e) => {
-  if (e.code === 'Space') flap();
-});
-window.addEventListener('click', flap);
-
-// Expose game start
+// === Expose for intro.js ===
 window.initGame = initGame;
