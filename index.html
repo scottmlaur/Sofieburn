@@ -3,10 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <title>SofieBurn</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="intro.css" />
 </head>
 <body>
-  <div id="game-container"></div>
+  <div id="intro-screen">
+    <img id="intro-image" src="assets/sofie_intro.png" alt="Sofie holding candle" />
+    <button id="start-btn">Start Game</button>
+  </div>
+
+  <div id="game-container" style="display: none;"></div>
 
   <script src="intro.js"></script>
   <script src="player.js"></script>
