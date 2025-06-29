@@ -1,77 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>SofieBurn</title>
-  <link rel="stylesheet" href="style.css" />
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
       background-color: #111;
-      font-family: Arial, sans-serif;
       color: white;
+      font-family: sans-serif;
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+    }
+
+    #intro {
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       height: 100vh;
     }
 
-    #game-container {
-      text-align: center;
-    }
-
-    #intro-image {
-      max-width: 100%;
+    #intro img {
+      max-width: 90%;
       height: auto;
+      margin-bottom: 20px;
     }
 
-    #start-btn {
-      margin-top: 20px;
+    #startButton {
       padding: 10px 20px;
-      font-size: 16px;
       background-color: #222;
       color: white;
       border: 1px solid #555;
+      font-size: 16px;
       cursor: pointer;
     }
 
-    #start-btn:hover {
-      background-color: #333;
+    #gameContainer {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      width: 100vw;
     }
 
-    canvas {
-      display: none;
+    #gameCanvas {
       background-color: black;
+      border: 1px solid orange;
     }
   </style>
 </head>
 <body>
-  <div id="game-container">
-    <img id="intro-image" src="assets/sofie-intro.png" alt="Sofie holding candle" />
-    <button id="start-btn">Start Game</button>
+  <div id="intro">
+    <img src="assets/images/sofie_intro.png" alt="Sofie holding candle">
+    <button id="startButton">Start Game</button>
   </div>
 
-  <canvas id="gameCanvas" width="800" height="600"></canvas>
+  <div id="gameContainer">
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+  </div>
 
   <script>
-    document.getElementById('start-btn').addEventListener('click', () => {
-      document.getElementById('game-container').style.display = 'none';
-      const canvas = document.getElementById('gameCanvas');
-      canvas.style.display = 'block';
+    const startButton = document.getElementById('startButton');
+    const intro = document.getElementById('intro');
+    const gameContainer = document.getElementById('gameContainer');
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
 
-      // Confirm rendering is alive
-      const ctx = canvas.getContext('2d');
+    startButton.addEventListener('click', () => {
+      intro.style.display = 'none';
+      gameContainer.style.display = 'flex';
+
+      // TEMP TEST: Draw red square
       ctx.fillStyle = 'red';
       ctx.fillRect(50, 50, 50, 50);
-      console.log('Canvas displayed and ready.');
+
+      // TODO: Hook up actual game.js logic here
     });
   </script>
-
-  <!-- Hook your game files -->
-  <script src="intro.js"></script>
-  <script src="player.js"></script>
-  <script src="main.js"></script>
-  <script src="game.js"></script>
 </body>
 </html>
