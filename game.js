@@ -1,16 +1,35 @@
-window.initGame = function(canvas) {
-  const ctx = canvas.getContext('2d');
+function initGame() {
+  const canvas = document.getElementById("gameCanvas");
+  if (!canvas) {
+    console.error("Canvas element not found.");
+    return;
+  }
 
-  // Load Sofie candle image
-  const candle = new Image();
-  candle.src = 'assets/characters/candle.png'; // Make sure this path is correct
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    console.error("Failed to get canvas context.");
+    return;
+  }
 
-  candle.onload = () => {
+  // Load Sofie intro image
+  const sofieImg = new Image();
+  sofieImg.src = "assets/characters/candle.png"; // Update path if needed
+
+  sofieImg.onload = function () {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(candle, 100, 100); // center position can be adjusted
+
+    const imgWidth = 128;
+    const imgHeight = 128;
+    const centerX = (canvas.width - imgWidth) / 2;
+    const centerY = (canvas.height - imgHeight) / 2;
+
+    ctx.drawImage(sofieImg, centerX, centerY, imgWidth, imgHeight);
   };
 
-  candle.onerror = () => {
-    console.error("Failed to load candle image at " + candle.src);
+  sofieImg.onerror = function () {
+    console.error("Failed to load intro image.");
   };
-};
+}
+
+// Expose to global scope so index.html can access it
+window.initGame = initGame;
