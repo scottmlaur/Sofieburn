@@ -1,28 +1,36 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const startBtn = document.getElementById("startBtn");
-  const introBtn = document.getElementById("introBtn");
+  console.log("DOM Ready, binding start button");
+
+  const startButton = document.getElementById("startButton");
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
   const introImage = document.getElementById("introImage");
 
   let background = new Image();
-  background.src = "assets/backgrounds/level1.png"; // Update path as needed
+  background.src = "assets/backgrounds/hallway.png";
 
-  background.onload = () => {
-    console.log("🔥 Background loaded");
-  };
+  let candle = new Image();
+  candle.src = "assets/characters/candle.png";
 
-  startBtn.addEventListener("click", () => {
-    console.log("🔥 Game started");
+  background.onload = () => console.log("Background loaded");
+  candle.onload = () => console.log("Candle sprite loaded");
+
+  startButton.addEventListener("click", () => {
+    console.log("Game started");
+
+    // Hide intro image and button
     introImage.style.display = "none";
+    startButton.style.display = "none";
+
+    // Show canvas
     canvas.style.display = "block";
+
+    drawFrame();
+  });
+
+  function drawFrame() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-  });
-
-  introBtn.addEventListener("click", () => {
-    console.log("🕯️ Intro shown");
-    canvas.style.display = "none";
-    introImage.style.display = "block";
-  });
+    ctx.drawImage(candle, canvas.width / 2 - 16, canvas.height - 64, 32, 64);
+  }
 });
