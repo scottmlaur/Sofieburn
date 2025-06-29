@@ -1,35 +1,17 @@
 function initGame() {
-  const canvas = document.getElementById("gameCanvas");
-  if (!canvas) {
-    console.error("Canvas element not found.");
-    return;
-  }
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
 
-  const ctx = canvas.getContext("2d");
-  if (!ctx) {
-    console.error("Failed to get canvas context.");
-    return;
-  }
+  // Clear canvas and fill background
+  ctx.fillStyle = '#111';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Load Sofie intro image
-  const sofieImg = new Image();
-  sofieImg.src = "assets/characters/candle.png"; // Update path if needed
+  // Draw simple placeholder flame
+  ctx.fillStyle = '#fda997';
+  ctx.beginPath();
+  ctx.arc(400, 300, 40, 0, Math.PI * 2);
+  ctx.fill();
 
-  sofieImg.onload = function () {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    const imgWidth = 128;
-    const imgHeight = 128;
-    const centerX = (canvas.width - imgWidth) / 2;
-    const centerY = (canvas.height - imgHeight) / 2;
-
-    ctx.drawImage(sofieImg, centerX, centerY, imgWidth, imgHeight);
-  };
-
-  sofieImg.onerror = function () {
-    console.error("Failed to load intro image.");
-  };
+  // You can replace this with loading levels, sprites, etc.
+  console.log('Game initialized');
 }
-
-// Expose to global scope so index.html can access it
-window.initGame = initGame;
