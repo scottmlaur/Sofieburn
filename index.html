@@ -21,11 +21,17 @@
       font-size: 2.5em;
     }
 
-    .button-row {
-      margin: 20px;
+    .intro-container {
       display: flex;
-      gap: 20px;
+      flex-direction: column;
       align-items: center;
+      margin: 20px 0;
+    }
+
+    .intro-container img {
+      border: 1px solid #f9a;
+      margin: 20px 0;
+      max-width: 100%;
     }
 
     button {
@@ -39,12 +45,8 @@
       font-weight: bold;
     }
 
-    #introImage {
-      height: 40px;
-      vertical-align: middle;
-    }
-
     #gameCanvas {
+      display: none;
       border: 1px solid #f9a;
       background-color: black;
       margin-bottom: 40px;
@@ -55,11 +57,9 @@
 
   <h1>SofieBurn</h1>
 
-  <div class="button-row">
+  <div id="introContainer" class="intro-container">
+    <img src="assets/characters/intro.png" alt="Sofie Intro">
     <button id="startButton">Light the Flame</button>
-    <button id="introButton">
-      <img src="assets/characters/intro.png" alt="Sofie Intro" id="introImage"/>
-    </button>
   </div>
 
   <canvas id="gameCanvas" width="800" height="600"></canvas>

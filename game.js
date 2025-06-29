@@ -1,39 +1,48 @@
-// game.js
-
 let canvas, ctx;
-let background;
+let background = new Image();
+let backgroundLoaded = false;
 
 function initGame() {
   console.log("🔥 initGame() fired");
 
+  // Setup canvas and context
   canvas = document.getElementById("gameCanvas");
   ctx = canvas.getContext("2d");
 
-  // Load and draw the background
-  background = new Image();
-  background.src = 'assets/backgrounds/sanctuary_bg.png';
-
+  // Load background
+  background.src = "assets/backgrounds/sanctuary_bg.png";
   background.onload = () => {
     console.log("🖼️ Background loaded");
-    draw(); // Start draw loop after image loads
+    backgroundLoaded = true;
+    requestAnimationFrame(gameLoop);
   };
 }
 
-function draw() {
+function gameLoop() {
+  if (!backgroundLoaded) return;
+
+  // Clear canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Draw background
   ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-  // You can draw other stuff here (like candle, pipes, etc)
+  // TODO: Add candle, pipes, physics, etc.
 
-  requestAnimationFrame(draw);
+  requestAnimationFrame(gameLoop);
 }
 
+// Wait for DOM to load and bind start button
 document.addEventListener("DOMContentLoaded", () => {
   console.log("🔥 DOM Ready, binding start button");
 
   const startButton = document.getElementById("startButton");
+  const introContainer = document.getElementById("introContainer");
+  const gameCanvas = document.getElementById("gameCanvas");
+
   startButton.addEventListener("click", () => {
-    document.getElementById("startButton").style.display = "none"; // hide button
+    introContainer.style.display = "none";
+    gameCanvas.style.display = "block";
     initGame();
   });
 });
