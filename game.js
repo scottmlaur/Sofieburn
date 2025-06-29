@@ -1,131 +1,85 @@
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
+// game.js — SofieBurn engine core
 
-canvas.width = 800;
-canvas.height = 600;
+let canvas, ctx;
+let candleImg, pipeImg, bgImg;
+let candle, pipes = [];
+let gravity = 0.5;
+let scrollSpeed = 2;
+let gameStarted = false;
 
-// Load assets
-const background = new Image();
-background.src = 'assets/backgrounds/sanctuary_bg.png';
+window.onload = () => {
+  canvas = document.getElementById("gameCanvas");
+  ctx = canvas.getContext("2d");
 
-const candle = new Image();
-candle.src = 'assets/characters/candle.png';
+  // Load images
+  candleImg = new Image();
+  candleImg.src = "assets/characters/candle.png";
 
-const pipeImg = new Image();
-pipeImg.src = 'assets/obstacles/pipe.png';
+  pipeImg = new Image();
+  pipeImg.src = "assets/obstacles/pipe_bottom_stone.png";
 
-// Candle physics
-let candleY = 250;
-let candleVelocity = 0;
-const gravity = 0.6;
-const lift = -10;
+  bgImg = new Image();
+  bgImg.src = "assets/backgrounds/sanctuary_bg.png";
 
-// Pipe setup
-let pipes = [];
-const pipeGap = 150;
-const pipeWidth = 60;
-const pipeSpacing = 200;
-const scrollSpeed = 2;
+  // Start game after assets load
+  bgImg.onload = () => {
+    candle = {
+      x: 100,
+      y: canvas.height / 2,
+      width: 40,
+      height: 40,
+      velocity: 0
+    };
 
-// Background scroll
-let bgX = 0;
-
-// Input
-document.addEventListener('keydown', (e) => {
-  if (e.code === 'Space') {
-    candleVelocity = lift;
-  }
-});
-
-// Spawn initial pipes
-function spawnPipes() {
-  for (let i = 0; i < 3; i++) {
-    const topPipeHeight = Math.floor(Math.random() * 200) + 50;
-    pipes.push({
-      x: canvas.width + i * pipeSpacing,
-      top: topPipeHeight,
-      bottom: topPipeHeight + pipeGap
-    });
-  }
-}
-
-// Main loop
-function update() {
-  // Candle movement
-  candleVelocity += gravity;
-  candleY += candleVelocity;
-
-  // Background scroll
-  bgX -= scrollSpeed;
-  if (bgX <= -canvas.width) {
-    bgX = 0;
-  }
-
-  // Pipe movement
-  for (let pipe of pipes) {
-    pipe.x -= scrollSpeed;
-  }
-
-  // Recycle pipes
-  if (pipes[0].x + pipeWidth < 0) {
-    pipes.shift();
-    const top = Math.floor(Math.random() * 200) + 50;
-    pipes.push({
-      x: pipes[pipes.length - 1].x + pipeSpacing,
-      top: top,
-      bottom: top + pipeGap
-    });
-  }
-
-  // Collision
-  for (let pipe of pipes) {
-    if (
-      100 < pipe.x + pipeWidth &&
-      100 + 40 > pipe.x &&
-      (candleY < pipe.top || candleY + 40 > pipe.bottom)
-    ) {
-      resetGame();
+    // Generate initial pipes
+    for (let i = 0; i < 3; i++) {
+      pipes.push({
+        x: 400 + i * 250,
+        y: Math.random() * (canvas.height - 150) + 50,
+        width: 60,
+        height: 200
+      });
     }
-  }
 
-  if (candleY > canvas.height || candleY < 0) {
-    resetGame();
-  }
-}
+    gameLoop();
+  };
 
-// Draw
-function draw() {
-  // Background
-  ctx.drawImage(background, bgX, 0, canvas.width, canvas.height);
-  ctx.drawImage(background, bgX + canvas.width, 0, canvas.width, canvas.height);
+  // Control
+  document.addEventListener("keydown", (e) => {
+    if (e.code === "Space" || e.code === "ArrowUp") {
+      candle.velocity = -8;
+    }
+  });
+};
 
-  // Pipes
-  for (let pipe of pipes) {
-    ctx.drawImage(pipeImg, pipe.x, 0, pipeWidth, pipe.top);
-    ctx.drawImage(pipeImg, pipe.x, pipe.bottom, pipeWidth, canvas.height - pipe.bottom);
-  }
-
-  // Candle
-  ctx.drawImage(candle, 100, candleY, 40, 40);
-}
-
-// Game loop
 function gameLoop() {
   update();
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
   draw();
   requestAnimationFrame(gameLoop);
 }
 
-function resetGame() {
-  candleY = 250;
-  candleVelocity = 0;
-  pipes = [];
-  spawnPipes();
+function update() {
+  // Apply gravity
+  candle.velocity += gravity;
+  candle.y += candle.velocity;
+
+  // Scroll pipes
+  for (let pipe of pipes) {
+    pipe.x -= scrollSpeed;
+
+    if (pipe.x + pipe.width < 0) {
+      pipe.x = canvas.width + Math.random() * 200;
+      pipe.y = Math.random() * (canvas.height - 150) + 50;
+    }
+  }
 }
 
-// Init
-window.onload = () => {
-  spawnPipes();
-  gameLoop();
-};
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+  ctx.drawImage(candleImg, candle.x, candle.y, candle.width, candle.height);
+
+  for (let pipe of pipes) {
+    ctx.drawImage(pipeImg, pipe.x, pipe.y, pipe.width, pipe.height);
+  }
+}
