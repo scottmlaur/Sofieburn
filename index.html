@@ -2,61 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SofieBurn</title>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-  <style>
-    body {
-      background-color: #111;
-      color: #f9a;
-      font-family: 'Press Start 2P', monospace;
-      text-align: center;
-      margin: 0;
-      padding: 20px;
-    }
-    h1 {
-      font-size: 2rem;
-    }
-    .btn {
-      background-color: #f9a;
-      border: none;
-      color: #111;
-      padding: 12px 20px;
-      margin: 10px;
-      font-weight: bold;
-      cursor: pointer;
-      border-radius: 6px;
-      font-family: 'Press Start 2P', monospace;
-    }
-    #buttonRow {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 1.5rem;
-      margin: 20px 0;
-    }
-    #buttonRow img {
-      height: 20px;
-      vertical-align: middle;
-      margin-right: 8px;
-    }
-    canvas {
-      display: block;
-      margin: 20px auto;
-      border: 1px solid #f9a;
-      background-color: black;
-    }
-  </style>
+  <link rel="stylesheet" href="intro.css" />
 </head>
 <body>
   <h1>SofieBurn</h1>
-  <div id="buttonRow">
-    <button id="startButton" class="btn">Light the Flame</button>
-    <button class="btn">
+
+  <div class="button-container">
+    <button id="startButton">Light the Flame</button>
+    <button id="introButton">
       <img src="./assets/intro.png" alt="Sofie Intro" />
       Sofie Intro
     </button>
   </div>
-  <canvas id="gameCanvas" width="640" height="480"></canvas>
+
+  <canvas id="gameCanvas" width="800" height="600"></canvas>
+
   <script src="game.js"></script>
 </body>
 </html>

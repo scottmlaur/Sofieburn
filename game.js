@@ -1,28 +1,24 @@
 document.addEventListener("DOMContentLoaded", () => {
   console.log("🔥 DOM Ready, binding start button");
 
+  const startButton = document.getElementById("startButton");
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
 
-  const startButton = document.getElementById("startButton");
   startButton.addEventListener("click", () => {
-    console.log("🕯️ Game Started");
+    console.log("🔥 Game started");
     initGame();
   });
 
   function initGame() {
-    console.log("initGame() fired");
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    const background = new Image();
-    background.src = "./assets/backgrounds/sanctuary_bg.png";
-
-    background.onload = () => {
-      ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+    const bgImage = new Image();
+    bgImage.onload = () => {
       console.log("🖼️ Background loaded");
+      ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
     };
-
-    background.onerror = () => {
-      console.error("❌ Failed to load background image");
-    };
+    bgImage.src = "./assets/backgrounds/sanctuary_bg.png"; // ✅ double check this exists
   }
 });
