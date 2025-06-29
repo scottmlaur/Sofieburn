@@ -6,62 +6,52 @@
   <title>SofieBurn</title>
   <style>
     body {
-      margin: 0;
       background-color: #111;
-      color: #fcae91;
+      color: #fca794;
       font-family: 'Courier New', Courier, monospace;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+      text-align: center;
+      margin: 0;
+      padding: 0;
     }
 
     h1 {
+      margin-top: 60px;
       font-size: 2.5rem;
-      margin-bottom: 20px;
     }
 
-    button {
+    #startButton {
+      margin: 20px auto;
       padding: 10px 20px;
-      font-size: 1rem;
-      cursor: pointer;
-      background-color: #fff;
+      font-size: 16px;
+      font-weight: bold;
       border: none;
-      border-radius: 5px;
+      border-radius: 4px;
+      cursor: pointer;
     }
 
-    canvas {
-      display: none;
-      border: 2px solid #fcae91;
-      margin-top: 20px;
+    #gameCanvas {
+      display: block;
+      margin: 30px auto;
+      background-color: #111;
+      border: 2px solid #fca794;
     }
   </style>
 </head>
 <body>
-
   <h1>SofieBurn</h1>
   <button id="startButton">Light the Flame</button>
-
-  <!-- Game Canvas -->
   <canvas id="gameCanvas" width="800" height="600"></canvas>
 
-  <!-- Load Game Logic -->
   <script src="game.js"></script>
-
-  <!-- Init + Asset Check -->
   <script>
-    document.getElementById('startButton')?.addEventListener('click', () => {
-      const canvas = document.getElementById('gameCanvas');
-      canvas.style.display = 'block';
-
-      if (typeof initGame === 'function') {
+    document.getElementById("startButton").addEventListener("click", () => {
+      const canvas = document.getElementById("gameCanvas");
+      if (typeof initGame === "function") {
         initGame(canvas);
       } else {
-        console.error("initGame() is not defined. Make sure it's declared in game.js.");
+        console.error("initGame is not defined!");
       }
     });
   </script>
-
 </body>
 </html>
