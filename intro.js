@@ -1,19 +1,26 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const startButton = document.getElementById('start-btn');
+window.addEventListener('DOMContentLoaded', () => {
   const introScreen = document.getElementById('intro-screen');
+  const gameCanvas = document.getElementById('gameCanvas');
 
-  if (startButton && introScreen) {
-    startButton.addEventListener('click', () => {
-      introScreen.style.display = 'none';
+  // Start with canvas hidden
+  gameCanvas.style.display = 'none';
 
-      // Call the game start logic (this must be defined in main.js or game.js)
-      if (typeof startGame === 'function') {
-        startGame();
-      } else {
-        console.warn('startGame() is not defined.');
-      }
-    });
-  } else {
-    console.error('Intro screen or start button not found.');
-  }
+  const startGame = () => {
+    introScreen.style.display = 'none';
+    gameCanvas.style.display = 'block';
+
+    // Optional: add fade-in effect
+    gameCanvas.style.opacity = 0;
+    setTimeout(() => {
+      gameCanvas.style.transition = 'opacity 1s';
+      gameCanvas.style.opacity = 1;
+    }, 50);
+
+    // Now call game logic if needed
+    if (typeof initGame === 'function') {
+      initGame();
+    }
+  };
+
+  document.body.addEventListener('click', startGame, { once: true });
 });
