@@ -6,68 +6,74 @@
   <title>SofieBurn</title>
   <style>
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
 
     body {
-      background-color: #111;
+      background-color: #000;
       color: white;
+      font-family: sans-serif;
+      height: 100vh;
+      overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      height: 100vh;
-      overflow: hidden;
     }
 
     #intro-screen {
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
     }
 
     #intro-image {
       max-width: 90vw;
-      max-height: 70vh;
+      max-height: 80vh;
       height: auto;
       width: auto;
+      display: block;
+      margin: 0 auto;
     }
 
     #start-btn {
       margin-top: 20px;
       padding: 10px 20px;
-      font-size: 1rem;
+      font-size: 16px;
+      background-color: #222;
+      color: white;
+      border: 1px solid white;
       cursor: pointer;
     }
 
-    #game-canvas {
+    canvas {
       display: none;
-      background-color: black;
+      background: black;
     }
   </style>
 </head>
 <body>
   <div id="intro-screen">
-    <img id="intro-image" src="assets/sofie_intro.png" alt="Sofie holding a candle" />
+    <img id="intro-image" src="assets/sofie_intro.png" alt="Sofie holding candle" />
     <button id="start-btn">Start Game</button>
   </div>
 
   <canvas id="game-canvas" width="800" height="600"></canvas>
 
   <script>
-    const startBtn = document.getElementById("start-btn");
-    const introScreen = document.getElementById("intro-screen");
-    const canvas = document.getElementById("game-canvas");
+    const introScreen = document.getElementById('intro-screen');
+    const startBtn = document.getElementById('start-btn');
+    const canvas = document.getElementById('game-canvas');
 
-    startBtn.addEventListener("click", () => {
-      introScreen.style.display = "none";
-      canvas.style.display = "block";
-      // You can trigger your game start logic here
-      if (typeof startGame === 'function') startGame();
+    startBtn.addEventListener('click', () => {
+      introScreen.style.display = 'none';
+      canvas.style.display = 'block';
+      if (typeof startGame === 'function') startGame(); // Safe game init
     });
   </script>
-  <script src="main.js"></script>
+  <script src="game.js"></script>
 </body>
 </html>
