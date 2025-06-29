@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Sanctuary Start",
+    "scrollSpeed": 2,
+    "gravity": 0.4,
+    "bird": { "x": 100, "y": 200 },
+    "pipes": {
+      "gap": 140,
+      "interval": 1500
+    },
+    "background": "../assets/backgrounds/sanctuary_bg.png",
+    "finishLineX": 3000
+  }
+]

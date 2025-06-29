@@ -1,0 +1,48 @@
+{
+  "name": "Sanctuary",
+  "description": "The first sacred corridor. No threats—just gravity and breath.",
+  "scrollSpeed": 2.4,
+  "gravity": 0.4,
+  "birdStartX": 100,
+  "birdStartY": 300,
+  "pipes": [
+    {
+      "x": 400,
+      "gapY": 200,
+      "gapHeight": 150,
+      "phase": "SPARSE_PIPE_PHASE",
+      "spawnTop": false,
+      "angle": 0,
+      "verticalSpeed": 0,
+      "sparseMover": false,
+      "movementRange": 0
+    },
+    {
+      "x": 650,
+      "gapY": 180,
+      "gapHeight": 150,
+      "phase": "SPARSE_PIPE_PHASE",
+      "spawnTop": true,
+      "angle": -0.4,
+      "verticalSpeed": 0,
+      "sparseMover": false,
+      "movementRange": 0
+    },
+    {
+      "x": 900,
+      "gapY": 220,
+      "gapHeight": 150,
+      "phase": "SPARSE_PIPE_PHASE",
+      "spawnTop": false,
+      "angle": 0.3,
+      "verticalSpeed": 0,
+      "sparseMover": false,
+      "movementRange": 0
+    }
+  ],
+  "bullets": [],
+  "bulletTriggers": [],
+  "version": 1,
+  "genericObjects": [],
+  "finishLineX": 1200
+}

@@ -1,0 +1,71 @@
+/* intro.css — Cold Breath Edition */
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+  margin: 0;
+  background-color: #000;
+  color: #f97;
+  font-family: 'Press Start 2P', monospace;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+#intro-screen {
+  text-align: center;
+  animation: fadeIn 2s ease-out;
+}
+
+#sofie-pixel {
+  width: 200px;
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: 
+    fadeInSofie 3s ease-out forwards,
+    flicker 1.8s infinite;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+#subtitle {
+  font-size: 12px;
+  color: #aaa;
+  margin-bottom: 40px;
+}
+
+button {
+  font-family: 'Press Start 2P', monospace;
+  background-color: #111;
+  color: #f97;
+  border: 2px solid #f97;
+  padding: 12px 24px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #222;
+}
+
+@keyframes fadeInSofie {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes flicker {
+  0%, 100% { filter: brightness(1); }
+  45% { filter: brightness(1.1); }
+  50% { filter: brightness(0.9); }
+  55% { filter: brightness(1.15); }
+  70% { filter: brightness(1); }
+}
