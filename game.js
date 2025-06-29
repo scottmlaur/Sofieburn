@@ -1,24 +1,33 @@
 document.addEventListener("DOMContentLoaded", () => {
   console.log("🔥 DOM Ready, binding start button");
 
-  const startButton = document.getElementById("startButton");
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
 
+  const background = new Image();
+  background.src = "assets/backgrounds/sanctuary_bg.png";
+
+  background.onload = () => {
+    console.log("📜 Background loaded");
+    // Draw background immediately
+    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+  };
+
+  background.onerror = () => {
+    console.error("❌ Failed to load sanctuary_bg.png");
+  };
+
+  // Handle Start Button
+  const startButton = document.getElementById("startButton");
   startButton.addEventListener("click", () => {
-    console.log("🔥 Game started");
-    initGame();
+    console.log("🔥 initGame() fired");
+    drawScene();
   });
 
-  function initGame() {
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    const bgImage = new Image();
-    bgImage.onload = () => {
-      console.log("🖼️ Background loaded");
-      ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
-    };
-    bgImage.src = "./assets/backgrounds/sanctuary_bg.png"; // ✅ double check this exists
+  function drawScene() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+    // Here you will load and draw the candle, pipes, player etc.
+    // For now, just showing background
   }
 });
