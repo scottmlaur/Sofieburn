@@ -2,16 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SofieBurn</title>
   <style>
     body {
       background-color: #111;
       color: #f9a;
       font-family: 'Courier New', monospace;
-      text-align: center;
       margin: 0;
       padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     h1 {
@@ -19,8 +21,14 @@
       font-size: 2.5em;
     }
 
-    #startButton {
+    .button-row {
       margin: 20px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    button {
       padding: 12px 24px;
       font-size: 1em;
       background: #f9a;
@@ -31,10 +39,15 @@
       font-weight: bold;
     }
 
+    #introImage {
+      height: 40px;
+      vertical-align: middle;
+    }
+
     #gameCanvas {
       border: 1px solid #f9a;
-      margin-top: 20px;
       background-color: black;
+      margin-bottom: 40px;
     }
   </style>
 </head>
@@ -42,14 +55,15 @@
 
   <h1>SofieBurn</h1>
 
-  <button id="startButton">Light the Flame</button>
-
-  <!-- Use correct image path -->
-  <img src="assets/intro.png" alt="Sofie Intro" style="border:1px solid #f9a; margin: 20px auto; display:block;" width="400" />
+  <div class="button-row">
+    <button id="startButton">Light the Flame</button>
+    <button id="introButton">
+      <img src="assets/characters/intro.png" alt="Sofie Intro" id="introImage"/>
+    </button>
+  </div>
 
   <canvas id="gameCanvas" width="800" height="600"></canvas>
 
   <script src="game.js"></script>
-
 </body>
 </html>
