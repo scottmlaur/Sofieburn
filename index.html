@@ -4,19 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SofieBurn</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="intro.css" />
 </head>
 <body>
-  <!-- Intro screen -->
-  <div id="introScreen" style="text-align: center; margin-top: 100px;">
+  <div id="introScreen">
     <h1>SofieBurn</h1>
-    <button id="startButton">Light the Flame</button>
+    <button onclick="startGame()">Light the Flame</button>
   </div>
-
-  <!-- Game canvas -->
   <canvas id="gameCanvas" width="800" height="600" style="display: none;"></canvas>
 
-  <!-- Scripts -->
   <script src="intro.js"></script>
   <script src="game.js"></script>
 </body>
