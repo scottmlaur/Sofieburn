@@ -2,34 +2,26 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SofieBurn</title>
   <link rel="stylesheet" href="intro.css" />
   <style>
     body {
       margin: 0;
       background-color: #111;
-      font-family: 'Courier New', monospace;
-      color: #fca89f;
+      color: #ffa07a;
+      font-family: monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #introScreen {
       text-align: center;
     }
-
     #gameCanvas {
       display: none;
       background-color: black;
-    }
-
-    #introScreen {
-      padding-top: 100px;
-    }
-
-    button {
-      background-color: #fff;
-      color: #000;
-      border: none;
-      padding: 8px 12px;
-      font-size: 14px;
-      cursor: pointer;
     }
   </style>
 </head>
@@ -41,8 +33,8 @@
 
   <canvas id="gameCanvas" width="800" height="600"></canvas>
 
-  <!-- JS Files -->
-  <script src="intro.js"></script>
-  <script src="game.js"></script>
+  <!-- Load scripts after DOM is ready -->
+  <script src="intro.js" defer></script>
+  <script src="game.js" defer></script>
 </body>
 </html>
