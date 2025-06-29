@@ -9,38 +9,53 @@
       color: #f88;
       font-family: 'Courier New', monospace;
       text-align: center;
+      margin: 0;
       padding: 40px;
     }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+    }
+
     #introImage {
       width: 300px;
       height: auto;
-      border-radius: 10px;
       display: block;
       margin: 0 auto 20px;
     }
-    canvas {
-      display: none;
-      background-color: #000;
-      margin-top: 20px;
-    }
-    button {
-      padding: 12px 24px;
-      font-size: 16px;
+
+    #startButton {
       background-color: #f88;
       color: #111;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
+      padding: 12px 24px;
+      font-size: 18px;
+      font-weight: bold;
       cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    #startButton:hover {
+      background-color: #faa;
+    }
+
+    #gameCanvas {
+      display: none;
+      margin-top: 30px;
+      background-color: #000;
+      border: 2px solid #f88;
     }
   </style>
 </head>
 <body>
   <h1>SofieBurn</h1>
-  <img id="introImage" src="assets/intro.png" alt="Sofie holding candle">
+  <img id="introImage" src="assets/intro.png" alt="Sofie holding a candle">
   <button id="startButton">Light the Flame</button>
   <canvas id="gameCanvas" width="800" height="600"></canvas>
 
-  <!-- ✅ THIS LINE FIXES THE BUG -->
+  <!-- Make sure this script path matches your project structure -->
   <script src="game.js" defer></script>
 </body>
 </html>
