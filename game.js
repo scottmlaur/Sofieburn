@@ -1,12 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
   console.log('🔥 DOM Ready, binding start button');
 
-  const introScreen = document.getElementById('intro-screen');
   const startButton = document.getElementById('startButton');
+  const introScreen = document.getElementById('intro-screen');
   const gameCanvas = document.getElementById('gameCanvas');
-  const ctx = gameCanvas.getContext('2d');
+  const ctx = gameCanvas?.getContext('2d');
 
-  if (!introScreen || !startButton || !gameCanvas || !ctx) {
+  if (!startButton || !introScreen || !gameCanvas || !ctx) {
     console.error('❌ Missing elements in DOM. Check your HTML IDs.');
     return;
   }
@@ -16,16 +16,17 @@ document.addEventListener('DOMContentLoaded', () => {
     introScreen.style.display = 'none';
     gameCanvas.style.display = 'block';
 
-    startGame();
+    const bgImage = new Image();
+    bgImage.src = 'assets/backgrounds/sanctuary_bg.png';
+
+    bgImage.onload = () => {
+      requestAnimationFrame(gameLoop);
+    };
+
+    function gameLoop() {
+      ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+      ctx.drawImage(bgImage, 0, 0, gameCanvas.width, gameCanvas.height);
+      requestAnimationFrame(gameLoop);
+    }
   });
-
-  function startGame() {
-    // Placeholder game loop or init logic
-    ctx.fillStyle = 'black';
-    ctx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
-
-    ctx.fillStyle = 'white';
-    ctx.font = '28px sans-serif';
-    ctx.fillText('SofieBurn is Lit 🕯️', 250, 300);
-  }
 });
