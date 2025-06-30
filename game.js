@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   startButton.addEventListener('click', () => {
-    console.log('🚀 Starting game...');
+    console.log('🚀 Start button clicked');
     introScreen.style.display = 'none';
     gameCanvas.style.display = 'block';
 
@@ -32,19 +32,23 @@ document.addEventListener('DOMContentLoaded', () => {
       height: 80
     };
 
-    // 🆕 Safely inject flappy-level.json loading (only change)
+    // Fetch level data and override candle values if present
     fetch('./flappy-level.json')
       .then(response => {
-        if (!response.ok) throw new Error('Failed to load flappy-level.json');
+        if (!response.ok) {
+          throw new Error('Failed to load flappy-level.json');
+        }
         return response.json();
       })
-      .then(level => {
-        console.log('📄 Detailed level loaded:', level);
-        if (level.birdStartX !== undefined) candle.x = level.birdStartX;
-        if (level.birdStartY !== undefined) candle.y = level.birdStartY;
+      .then(levelData => {
+        console.log('📜 Detailed level loaded:', levelData);
+
+        if (levelData.birdStartX !== undefined) candle.x = levelData.birdStartX;
+        if (levelData.birdStartY !== undefined) candle.y = levelData.birdStartY;
+        // You can add more mappings from levelData as needed
       })
-      .catch(err => {
-        console.error('❌ Failed to load flappy-level.json:', err);
+      .catch(error => {
+        console.error('❌ Failed to load flappy-level.json:', error);
       });
 
     bgImage.onload = () => {
