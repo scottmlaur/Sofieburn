@@ -1,61 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SofieBurn</title>
   <style>
     body {
       background-color: #111;
-      color: #f88;
+      color: #ff7b7b;
       font-family: 'Courier New', monospace;
       text-align: center;
       margin: 0;
-      padding: 40px;
+      padding: 0;
     }
 
     h1 {
-      font-size: 2.5rem;
-      margin-bottom: 30px;
+      font-size: 3rem;
+      margin-top: 20px;
+    }
+
+    #introScreen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 40px;
     }
 
     #introImage {
       width: 300px;
       height: auto;
-      display: block;
-      margin: 0 auto 20px;
+      border: 2px solid #ff7b7b;
     }
 
     #startButton {
-      background-color: #f88;
-      color: #111;
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: #ff7b7b;
       border: none;
-      border-radius: 6px;
-      padding: 12px 24px;
-      font-size: 18px;
-      font-weight: bold;
+      border-radius: 5px;
+      color: #111;
       cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    #startButton:hover {
-      background-color: #faa;
     }
 
     #gameCanvas {
       display: none;
-      margin-top: 30px;
-      background-color: #000;
-      border: 2px solid #f88;
+      margin-top: 40px;
     }
   </style>
 </head>
 <body>
   <h1>SofieBurn</h1>
-  <img id="introImage" src="assets/intro.png" alt="Sofie holding a candle">
-  <button id="startButton">Light the Flame</button>
+
+  <div id="introScreen">
+    <img id="introImage" src="./assets/intro.jpg" alt="Intro Image" />
+    <button id="startButton">Light the Flame</button>
+  </div>
+
   <canvas id="gameCanvas" width="800" height="600"></canvas>
 
-  <!-- Make sure this script path matches your project structure -->
-  <script src="game.js" defer></script>
+  <script src="game.js"></script>
 </body>
 </html>

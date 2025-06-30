@@ -1,37 +1,110 @@
-window.addEventListener("DOMContentLoaded", () => {
-  console.log("🔥 DOM Ready, binding start button");
+let canvas = document.getElementById("gameCanvas");
+let ctx = canvas.getContext("2d");
 
-  const startButton = document.getElementById("startButton");
-  const canvas = document.getElementById("gameCanvas");
-  const introImage = document.getElementById("introImage");
+let bird = { x: 100, y: 200, width: 40, height: 40, velocity: 0 };
+let pipes = [];
+let backgroundImage = new Image();
+let candleImage = new Image();
 
-  if (!startButton || !canvas || !introImage) {
-    console.error("❌ Missing elements in DOM. Check your HTML IDs.");
-    return;
-  }
+let scrollSpeed = 2;
+let gravity = 0.4;
+let pipeGap = 140;
+let pipeInterval = 1500;
+let finishLineX = 3000;
+let gameStarted = false;
+let levelData = null;
+let pipeTimer = 0;
 
-  const ctx = canvas.getContext("2d");
+candleImage.src = "assets/candle.png";
 
-  const background = new Image();
-  background.src = "assets/backgrounds/hallway.png";
-
-  const candle = new Image();
-  candle.src = "assets/characters/candle.png";
-
-  background.onload = () => console.log("🖼️ Background loaded");
-  candle.onload = () => console.log("🕯️ Candle sprite loaded");
-
-  startButton.addEventListener("click", () => {
-    console.log("🔥 Game started");
-    introImage.style.display = "none";
-    startButton.style.display = "none";
-    canvas.style.display = "block";
-    draw();
+// Load level data
+fetch("levels.json")
+  .then((response) => response.json())
+  .then((data) => {
+    levelData = data[0]; // Use first level
+    console.log("📜 Loaded level:", levelData.name);
+    applyLevelSettings(levelData);
+    bindStartButton();
+  })
+  .catch((error) => {
+    console.error("⚠️ Error loading levels.json:", error);
   });
 
-  function draw() {
+function applyLevelSettings(level) {
+  scrollSpeed = level.scrollSpeed;
+  gravity = level.gravity;
+  bird.x = level.bird.x;
+  bird.y = level.bird.y;
+  pipeGap = level.pipes.gap;
+  pipeInterval = level.pipes.interval;
+  finishLineX = level.finishLineX;
+  backgroundImage.src = level.background;
+}
+
+function bindStartButton() {
+  document.getElementById("startButton").addEventListener("click", () => {
+    document.getElementById("intro").style.display = "none";
+    document.getElementById("gameCanvas").style.display = "block";
+    startGame();
+  });
+}
+
+function startGame() {
+  gameStarted = true;
+  bird.velocity = 0;
+  pipes = [];
+  pipeTimer = 0;
+  console.log("🔥 Game started");
+  requestAnimationFrame(gameLoop);
+}
+
+function gameLoop(timestamp) {
+  if (!gameStarted) return;
+
+  updateGame();
+  renderGame();
+  requestAnimationFrame(gameLoop);
+}
+
+function updateGame() {
+  bird.velocity += gravity;
+  bird.y += bird.velocity;
+
+  pipeTimer += 16.66;
+  if (pipeTimer > pipeInterval) {
+    pipeTimer = 0;
+    spawnPipe();
+  }
+
+  pipes.forEach(pipe => pipe.x -= scrollSpeed);
+  pipes = pipes.filter(pipe => pipe.x + pipe.width > 0);
+}
+
+function renderGame() {
+  try {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-    ctx.drawImage(candle, canvas.width / 2 - 16, canvas.height - 64, 32, 64);
+    ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+    ctx.drawImage(candleImage, bird.x, bird.y, bird.width, bird.height);
+
+    pipes.forEach(pipe => {
+      ctx.fillStyle = "pink";
+      ctx.fillRect(pipe.x, 0, pipe.width, pipe.top);
+      ctx.fillRect(pipe.x, pipe.top + pipeGap, pipe.width, canvas.height);
+    });
+  } catch (e) {
+    console.error("🛑 drawImage error:", e);
+  }
+}
+
+function spawnPipe() {
+  let top = Math.floor(Math.random() * (canvas.height - pipeGap - 100)) + 50;
+  pipes.push({ x: canvas.width, width: 50, top: top });
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.code === "Space" || e.code === "ArrowUp") {
+    bird.velocity = -8;
   }
 });
+
+console.log("🔥 DOM Ready, waiting for start button...");
