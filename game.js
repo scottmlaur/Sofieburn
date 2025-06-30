@@ -4,34 +4,37 @@ document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('gameCanvas');
   const ctx = canvas.getContext('2d');
 
-  let backgroundImage = new Image();
-  let gameStarted = false;
+  if (!startBtn || !intro || !canvas) {
+    console.error("❌ Missing elements in DOM. Check your HTML IDs.");
+    return;
+  }
 
   startBtn.addEventListener('click', async () => {
     intro.style.display = 'none';
     canvas.style.display = 'block';
-    await loadLevelAndStart();
+    await loadLevel();
   });
 
-  async function loadLevelAndStart() {
+  async function loadLevel() {
     try {
       const res = await fetch('levels.json');
       const levels = await res.json();
       const level = levels[0];
 
-      backgroundImage.src = level.background;
+      const background = new Image();
+      background.src = level.background;
 
-      backgroundImage.onload = () => {
-        ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-        console.log('Game started');
+      background.onload = () => {
+        ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+        console.log("✅ Game started");
       };
 
-      backgroundImage.onerror = () => {
-        console.error("Background image failed to load:", backgroundImage.src);
+      background.onerror = () => {
+        console.error(`❌ Failed to load image: ${background.src}`);
       };
 
     } catch (err) {
-      console.error("Error loading level or image:", err);
+      console.error("❌ Failed to load level data:", err);
     }
   }
 });
