@@ -20,7 +20,12 @@ document.addEventListener('DOMContentLoaded', () => {
     bgImage.src = 'assets/backgrounds/sanctuary_bg.png';
 
     bgImage.onload = () => {
+      console.log('🖼️ Background image loaded.');
       requestAnimationFrame(gameLoop);
+    };
+
+    bgImage.onerror = () => {
+      console.error('❌ Failed to load background image. Check path: assets/backgrounds/sanctuary_bg.png');
     };
 
     function gameLoop() {
