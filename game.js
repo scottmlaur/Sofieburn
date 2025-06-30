@@ -32,20 +32,27 @@ document.addEventListener('DOMContentLoaded', () => {
       height: 80
     };
 
-    // Fetch level data and override candle values if present
+    let bgReady = false;
+    let candleReady = false;
+    let jsonReady = false;
+
+    function tryStart() {
+      if (bgReady && candleReady && jsonReady) {
+        requestAnimationFrame(gameLoop);
+      }
+    }
+
     fetch('./flappy-level.json')
       .then(response => {
-        if (!response.ok) {
-          throw new Error('Failed to load flappy-level.json');
-        }
+        if (!response.ok) throw new Error('Failed to load flappy-level.json');
         return response.json();
       })
-      .then(levelData => {
-        console.log('📜 Detailed level loaded:', levelData);
-
-        if (levelData.birdStartX !== undefined) candle.x = levelData.birdStartX;
-        if (levelData.birdStartY !== undefined) candle.y = levelData.birdStartY;
-        // You can add more mappings from levelData as needed
+      .then(data => {
+        console.log('📜 Detailed level loaded:', data);
+        if (data.birdStartX !== undefined) candle.x = data.birdStartX;
+        if (data.birdStartY !== undefined) candle.y = data.birdStartY;
+        jsonReady = true;
+        tryStart();
       })
       .catch(error => {
         console.error('❌ Failed to load flappy-level.json:', error);
@@ -53,21 +60,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     bgImage.onload = () => {
       console.log('🖼️ Background image loaded.');
-
-      if (candleImage.complete) {
-        console.log('🕯️ Candle image already loaded.');
-        requestAnimationFrame(gameLoop);
-      } else {
-        candleImage.onload = () => {
-          console.log('🕯️ Candle image loaded.');
-          requestAnimationFrame(gameLoop);
-        };
-      }
+      bgReady = true;
+      tryStart();
     };
 
-    candleImage.onerror = () => {
-      console.error('❌ Failed to load candle image. Check path: ./assets/characters/candle.png');
-    };
+    if (candleImage.complete) {
+      console.log('🕯️ Candle image already loaded.');
+      candleReady = true;
+      tryStart();
+    } else {
+      candleImage.onload = () => {
+        console.log('🕯️ Candle image loaded.');
+        candleReady = true;
+        tryStart();
+      };
+    }
 
     function drawCandle() {
       ctx.drawImage(candleImage, candle.x, candle.y, candle.width, candle.height);
