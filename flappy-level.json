@@ -1,16 +1,28 @@
-fetch('./assets/levels/flappy-level.json')
-  .then(response => {
-    if (!response.ok) throw new Error('Failed to load flappy-level.json');
-    return response.json();
-  })
-  .then(level => {
-    console.log('📄 Detailed level loaded:', level);
-
-    if (level.birdStartX !== undefined) candle.x = level.birdStartX;
-    if (level.birdStartY !== undefined) candle.y = level.birdStartY;
-
-    // Later: bind scrollSpeed, gravity, pipes, etc.
-  })
-  .catch(err => {
-    console.error('❌ Failed to load flappy-level.json:', err);
-  });
+{
+  "name": "Sanctuary Start",
+  "scrollSpeed": 2.4,
+  "gravity": 0.4,
+  "birdStartX": 100,
+  "birdStartY": 300,
+  "pipes": [
+    {
+      "x": 300,
+      "gapY": 200,
+      "gapHeight": 150,
+      "spawnTop": false,
+      "angle": 0,
+      "verticalSpeed": 0,
+      "movementRange": 100
+    },
+    {
+      "x": 500,
+      "gapY": 180,
+      "gapHeight": 150,
+      "spawnTop": true,
+      "angle": -0.7,
+      "verticalSpeed": 0,
+      "movementRange": 100
+    }
+  ],
+  "finishLineX": 3000
+}

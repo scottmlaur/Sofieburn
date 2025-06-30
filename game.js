@@ -32,8 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
       height: 80
     };
 
-    // ✅ Injected: Load flappy-level.json and override candle position
-    fetch('./assets/levels/flappy-level.json')
+    // ✅ Updated fetch path to flappy-level.json in root
+    fetch('./flappy-level.json')
       .then(response => {
         if (!response.ok) throw new Error('Failed to load flappy-level.json');
         return response.json();
