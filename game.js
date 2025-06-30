@@ -1,48 +1,20 @@
-document.addEventListener("DOMContentLoaded", function () {
-  console.log("🔥 DOM Ready, binding start button");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SofieBurn</title>
+  <link rel="stylesheet" href="intro.css" />
+</head>
+<body>
+  <div id="intro-screen">
+    <h1>SofieBurn</h1>
+    <img src="assets/intro.png" alt="Sofie holding candle" id="intro-image" />
+    <button id="start-button">Light the Flame</button>
+  </div>
 
-  const startButton = document.getElementById("startButton");
-  const introImage = document.getElementById("introImage");
-  const gameContainer = document.getElementById("gameContainer");
+  <canvas id="game-canvas" style="display: none;"></canvas>
 
-  if (!startButton || !introImage || !gameContainer) {
-    console.error("❌ Missing elements in DOM. Check your HTML IDs.");
-    return;
-  }
-
-  // Set correct image path
-  introImage.src = "assets/intro.png";
-  introImage.alt = "Sofie holding candle";
-
-  startButton.addEventListener("click", startGame);
-
-  function startGame() {
-    console.log("🔥 Game started");
-
-    // Remove intro content
-    introImage.style.display = "none";
-    startButton.style.display = "none";
-
-    // Create and add canvas
-    const canvas = document.createElement("canvas");
-    canvas.id = "gameCanvas";
-    canvas.width = 800;
-    canvas.height = 512;
-    canvas.style.border = "2px solid #ff6b6b";
-    canvas.style.display = "block";
-    canvas.style.margin = "0 auto";
-
-    gameContainer.appendChild(canvas);
-
-    const ctx = canvas.getContext("2d");
-
-    const background = new Image();
-    background.src = "assets/backgrounds/sanctuary_bg.png";
-    background.onload = () => {
-      ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-    };
-    background.onerror = () => {
-      console.error("❌ Failed to load background image");
-    };
-  }
-});
+  <script src="game.js"></script>
+</body>
+</html>
