@@ -1,14 +1,30 @@
 window.addEventListener('DOMContentLoaded', () => {
-  console.log('🕯️ DOM Ready, binding start button');
+  console.log('🕯️ DOM fully loaded, trying to bind start button...');
+  
   const startButton = document.getElementById('startButton');
-  if (startButton) {
-    startButton.addEventListener('click', () => {
-      console.log('🔥 Starting game...');
-      document.getElementById('intro-screen').style.display = 'none';
-      document.getElementById('gameCanvas').style.display = 'block';
-      startGame(); // This assumes startGame is defined elsewhere and handles init
-    });
-  } else {
-    console.error('Start button not found in DOM');
+  if (!startButton) {
+    console.error('❌ Could not find #startButton in DOM.');
+    return;
   }
+
+  startButton.addEventListener('click', () => {
+    console.log('🟢 Start button clicked.');
+    
+    const intro = document.getElementById('intro-screen');
+    const canvas = document.getElementById('gameCanvas');
+    if (!intro || !canvas) {
+      console.error('❌ Missing #intro-screen or #gameCanvas.');
+      return;
+    }
+
+    intro.style.display = 'none';
+    canvas.style.display = 'block';
+
+    if (typeof startGame === 'function') {
+      console.log('🚀 Starting game...');
+      startGame();
+    } else {
+      console.warn('⚠️ startGame() is not defined.');
+    }
+  });
 });
