@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   startButton.addEventListener('click', () => {
-    console.log('🚀 Start button clicked');
+    console.log('🚀 Starting game...');
     introScreen.style.display = 'none';
     gameCanvas.style.display = 'block';
 
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
       height: 80
     };
 
-    // ✅ Load flappy-level.json and override candle position
+    // 🆕 Safely inject flappy-level.json loading (only change)
     fetch('./flappy-level.json')
       .then(response => {
         if (!response.ok) throw new Error('Failed to load flappy-level.json');
@@ -40,7 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .then(level => {
         console.log('📄 Detailed level loaded:', level);
-
         if (level.birdStartX !== undefined) candle.x = level.birdStartX;
         if (level.birdStartY !== undefined) candle.y = level.birdStartY;
       })
