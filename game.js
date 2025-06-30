@@ -34,7 +34,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     bgImage.onload = () => {
       console.log('🖼️ Background image loaded.');
-      requestAnimationFrame(gameLoop);
+
+      if (candleImage.complete) {
+        console.log('🕯️ Candle image already loaded.');
+        requestAnimationFrame(gameLoop);
+      } else {
+        candleImage.onload = () => {
+          console.log('🕯️ Candle image loaded.');
+          requestAnimationFrame(gameLoop);
+        };
+      }
     };
 
     candleImage.onerror = () => {
