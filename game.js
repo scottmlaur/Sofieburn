@@ -1,35 +1,48 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", function () {
   console.log("🔥 DOM Ready, binding start button");
 
-  const startButton = document.getElementById("start-button");
-  const introImage = document.getElementById("intro-image");
-  const canvas = document.getElementById("gameCanvas");
-  const ctx = canvas.getContext("2d");
+  const startButton = document.getElementById("startButton");
+  const introImage = document.getElementById("introImage");
+  const gameContainer = document.getElementById("gameContainer");
 
-  let level = null;
-  let backgroundImg = new Image();
+  if (!startButton || !introImage || !gameContainer) {
+    console.error("❌ Missing elements in DOM. Check your HTML IDs.");
+    return;
+  }
 
-  startButton.addEventListener("click", () => {
+  // Set correct image path
+  introImage.src = "assets/intro.png";
+  introImage.alt = "Sofie holding candle";
+
+  startButton.addEventListener("click", startGame);
+
+  function startGame() {
     console.log("🔥 Game started");
+
+    // Remove intro content
     introImage.style.display = "none";
     startButton.style.display = "none";
+
+    // Create and add canvas
+    const canvas = document.createElement("canvas");
+    canvas.id = "gameCanvas";
+    canvas.width = 800;
+    canvas.height = 512;
+    canvas.style.border = "2px solid #ff6b6b";
     canvas.style.display = "block";
+    canvas.style.margin = "0 auto";
 
-    fetch("levels.json")
-      .then(response => response.json())
-      .then(data => {
-        level = data[0];
-        loadBackground(level.background);
-      });
-  });
+    gameContainer.appendChild(canvas);
 
-  function loadBackground(src) {
-    backgroundImg.src = src;
-    backgroundImg.onload = () => {
-      ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
+    const ctx = canvas.getContext("2d");
+
+    const background = new Image();
+    background.src = "assets/backgrounds/sanctuary_bg.png";
+    background.onload = () => {
+      ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
     };
-    backgroundImg.onerror = () => {
-      console.error("❌ Failed to load background image:", src);
+    background.onerror = () => {
+      console.error("❌ Failed to load background image");
     };
   }
 });
