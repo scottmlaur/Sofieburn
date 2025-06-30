@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     bgImage.src = 'assets/backgrounds/sanctuary_bg.png';
 
     const candleImage = new Image();
-    candleImage.src = 'assets/characters/candle.png';
+    candleImage.src = './assets/characters/candle.png';
 
     const candle = {
       x: gameCanvas.width / 4,
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     candleImage.onerror = () => {
-      console.error('❌ Failed to load candle image. Check path: assets/characters/candle.png');
+      console.error('❌ Failed to load candle image. Check path: ./assets/characters/candle.png');
     };
 
     function drawCandle() {
