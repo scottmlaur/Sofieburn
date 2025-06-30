@@ -1,30 +1,80 @@
-window.addEventListener('DOMContentLoaded', () => {
-  console.log('🕯️ DOM fully loaded, trying to bind start button...');
-  
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('🔥 DOM Ready, binding start button');
+
   const startButton = document.getElementById('startButton');
-  if (!startButton) {
-    console.error('❌ Could not find #startButton in DOM.');
+  const introScreen = document.getElementById('intro-screen');
+  const gameCanvas = document.getElementById('gameCanvas');
+  const ctx = gameCanvas?.getContext('2d');
+
+  if (!startButton || !introScreen || !gameCanvas || !ctx) {
+    console.error('❌ Missing elements in DOM. Check your HTML IDs.');
     return;
   }
 
   startButton.addEventListener('click', () => {
-    console.log('🟢 Start button clicked.');
-    
-    const intro = document.getElementById('intro-screen');
-    const canvas = document.getElementById('gameCanvas');
-    if (!intro || !canvas) {
-      console.error('❌ Missing #intro-screen or #gameCanvas.');
-      return;
+    console.log('🚀 Start button clicked');
+    introScreen.style.display = 'none';
+    gameCanvas.style.display = 'block';
+
+    gameCanvas.width = window.innerWidth;
+    gameCanvas.height = window.innerHeight;
+
+    const bgImage = new Image();
+    bgImage.src = 'assets/backgrounds/sanctuary_bg.png';
+
+    const candleImage = new Image();
+    candleImage.src = './assets/characters/candle.png';
+
+    const candle = {
+      x: gameCanvas.width / 4,
+      y: gameCanvas.height / 2,
+      width: 50,
+      height: 80
+    };
+
+    // ✅ Load flappy-level.json and override candle position
+    fetch('./flappy-level.json')
+      .then(response => {
+        if (!response.ok) throw new Error('Failed to load flappy-level.json');
+        return response.json();
+      })
+      .then(level => {
+        console.log('📄 Detailed level loaded:', level);
+
+        if (level.birdStartX !== undefined) candle.x = level.birdStartX;
+        if (level.birdStartY !== undefined) candle.y = level.birdStartY;
+      })
+      .catch(err => {
+        console.error('❌ Failed to load flappy-level.json:', err);
+      });
+
+    bgImage.onload = () => {
+      console.log('🖼️ Background image loaded.');
+
+      if (candleImage.complete) {
+        console.log('🕯️ Candle image already loaded.');
+        requestAnimationFrame(gameLoop);
+      } else {
+        candleImage.onload = () => {
+          console.log('🕯️ Candle image loaded.');
+          requestAnimationFrame(gameLoop);
+        };
+      }
+    };
+
+    candleImage.onerror = () => {
+      console.error('❌ Failed to load candle image. Check path: ./assets/characters/candle.png');
+    };
+
+    function drawCandle() {
+      ctx.drawImage(candleImage, candle.x, candle.y, candle.width, candle.height);
     }
 
-    intro.style.display = 'none';
-    canvas.style.display = 'block';
-
-    if (typeof startGame === 'function') {
-      console.log('🚀 Starting game...');
-      startGame();
-    } else {
-      console.warn('⚠️ startGame() is not defined.');
+    function gameLoop() {
+      ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+      ctx.drawImage(bgImage, 0, 0, gameCanvas.width, gameCanvas.height);
+      drawCandle();
+      requestAnimationFrame(gameLoop);
     }
   });
 });
