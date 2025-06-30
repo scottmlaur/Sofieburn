@@ -1,17 +1,14 @@
-    // ✅ Updated fetch path to point to root
-    fetch('./flappy-level.json')
-      .then(response => {
-        if (!response.ok) throw new Error('Failed to load flappy-level.json');
-        return response.json();
-      })
-      .then(level => {
-        console.log('📄 Detailed level loaded:', level);
-
-        if (level.birdStartX !== undefined) candle.x = level.birdStartX;
-        if (level.birdStartY !== undefined) candle.y = level.birdStartY;
-
-        // Later: bind scrollSpeed, gravity, pipes, etc.
-      })
-      .catch(err => {
-        console.error('❌ Failed to load flappy-level.json:', err);
-      });
+fetch('./flappy-level.json')
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to load flappy-level.json');
+    }
+    return response.json();
+  })
+  .then(levelData => {
+    console.log('📄 Detailed level loaded:', levelData);
+    // your existing logic using levelData continues here...
+  })
+  .catch(error => {
+    console.error('❌ Failed to load flappy-level.json:', error);
+  });
