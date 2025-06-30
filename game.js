@@ -32,49 +32,37 @@ document.addEventListener('DOMContentLoaded', () => {
       height: 80
     };
 
-    let bgReady = false;
-    let candleReady = false;
-    let jsonReady = false;
-
-    function tryStart() {
-      if (bgReady && candleReady && jsonReady) {
-        requestAnimationFrame(gameLoop);
-      }
-    }
-
-    fetch('./flappy-level.json')
-      .then(response => {
-        if (!response.ok) throw new Error('Failed to load flappy-level.json');
-        return response.json();
-      })
-      .then(data => {
-        console.log('📜 Detailed level loaded:', data);
-        if (data.birdStartX !== undefined) candle.x = data.birdStartX;
-        if (data.birdStartY !== undefined) candle.y = data.birdStartY;
-        jsonReady = true;
-        tryStart();
-      })
-      .catch(error => {
-        console.error('❌ Failed to load flappy-level.json:', error);
-      });
-
     bgImage.onload = () => {
       console.log('🖼️ Background image loaded.');
-      bgReady = true;
-      tryStart();
+
+      if (candleImage.complete) {
+        console.log('🕯️ Candle image already loaded.');
+        requestAnimationFrame(gameLoop);
+      } else {
+        candleImage.onload = () => {
+          console.log('🕯️ Candle image loaded.');
+          requestAnimationFrame(gameLoop);
+        };
+      }
     };
 
-    if (candleImage.complete) {
-      console.log('🕯️ Candle image already loaded.');
-      candleReady = true;
-      tryStart();
-    } else {
-      candleImage.onload = () => {
-        console.log('🕯️ Candle image loaded.');
-        candleReady = true;
-        tryStart();
-      };
-    }
+    candleImage.onerror = () => {
+      console.error('❌ Failed to load candle image. Check path: ./assets/characters/candle.png');
+    };
+
+    // ✅ Flappy-level.json fetch (only new code added)
+    fetch('./flappy-level.json')
+      .then((response) => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
+      })
+      .then((data) => {
+        console.log('📜 Flappy level JSON loaded:', data);
+        // Store or apply to game state here if needed
+      })
+      .catch((error) => {
+        console.error('❌ Failed to load flappy-level.json:', error);
+      });
 
     function drawCandle() {
       ctx.drawImage(candleImage, candle.x, candle.y, candle.width, candle.height);
