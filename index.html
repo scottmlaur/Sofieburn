@@ -2,52 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SofieBurn</title>
-  <style>
-    body {
-      background-color: #111;
-      color: #f88;
-      font-family: 'Courier New', monospace;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-    }
-    h1 {
-      margin-top: 30px;
-    }
-    #intro {
-      margin-top: 30px;
-    }
-    #introImage {
-      max-width: 300px;
-      border: 2px solid #f88;
-    }
-    #startBtn {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #f88;
-      color: #111;
-      border: none;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-    #gameCanvas {
-      display: none;
-      margin-top: 20px;
-      border: 2px solid #f88;
-    }
-  </style>
+  <link rel="stylesheet" href="intro.css">
 </head>
 <body>
   <h1>SofieBurn</h1>
-  <div id="intro">
-    <img id="introImage" src="assets/images/intro.jpg" alt="Sofie holding candle" />
-    <br />
-    <button id="startBtn">Light the Flame</button>
-  </div>
-  <canvas id="gameCanvas" width="600" height="400"></canvas>
-
+  <img id="intro-image" src="assets/intro.png" alt="Intro Image">
+  <button id="start-button">Light the Flame</button>
+  <canvas id="gameCanvas" width="800" height="600" style="display: none;"></canvas>
   <script src="game.js"></script>
 </body>
 </html>

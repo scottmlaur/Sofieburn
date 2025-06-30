@@ -1,40 +1,35 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const startBtn = document.getElementById('startBtn');
-  const intro = document.getElementById('intro');
-  const canvas = document.getElementById('gameCanvas');
-  const ctx = canvas.getContext('2d');
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("🔥 DOM Ready, binding start button");
 
-  if (!startBtn || !intro || !canvas) {
-    console.error("❌ Missing elements in DOM. Check your HTML IDs.");
-    return;
-  }
+  const startButton = document.getElementById("start-button");
+  const introImage = document.getElementById("intro-image");
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
 
-  startBtn.addEventListener('click', async () => {
-    intro.style.display = 'none';
-    canvas.style.display = 'block';
-    await loadLevel();
+  let level = null;
+  let backgroundImg = new Image();
+
+  startButton.addEventListener("click", () => {
+    console.log("🔥 Game started");
+    introImage.style.display = "none";
+    startButton.style.display = "none";
+    canvas.style.display = "block";
+
+    fetch("levels.json")
+      .then(response => response.json())
+      .then(data => {
+        level = data[0];
+        loadBackground(level.background);
+      });
   });
 
-  async function loadLevel() {
-    try {
-      const res = await fetch('levels.json');
-      const levels = await res.json();
-      const level = levels[0];
-
-      const background = new Image();
-      background.src = level.background;
-
-      background.onload = () => {
-        ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-        console.log("✅ Game started");
-      };
-
-      background.onerror = () => {
-        console.error(`❌ Failed to load image: ${background.src}`);
-      };
-
-    } catch (err) {
-      console.error("❌ Failed to load level data:", err);
-    }
+  function loadBackground(src) {
+    backgroundImg.src = src;
+    backgroundImg.onload = () => {
+      ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
+    };
+    backgroundImg.onerror = () => {
+      console.error("❌ Failed to load background image:", src);
+    };
   }
 });
