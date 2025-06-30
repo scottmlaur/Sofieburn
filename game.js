@@ -19,6 +19,15 @@ document.addEventListener('DOMContentLoaded', () => {
     gameCanvas.width = window.innerWidth;
     gameCanvas.height = window.innerHeight;
 
+    fetch('flappy-level.json')  // ✅ FIXED: removed "./"
+      .then(response => response.json())
+      .then(levelData => {
+        console.log('📦 Detailed level loaded:', levelData);
+      })
+      .catch(error => {
+        console.error('❌ Failed to load flappy-level.json:', error);
+      });
+
     const bgImage = new Image();
     bgImage.src = 'assets/backgrounds/sanctuary_bg.png';
 
@@ -49,20 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
     candleImage.onerror = () => {
       console.error('❌ Failed to load candle image. Check path: ./assets/characters/candle.png');
     };
-
-    // ✅ Flappy-level.json fetch (only new code added)
-    fetch('./flappy-level.json')
-      .then((response) => {
-        if (!response.ok) throw new Error('Network response was not ok');
-        return response.json();
-      })
-      .then((data) => {
-        console.log('📜 Flappy level JSON loaded:', data);
-        // Store or apply to game state here if needed
-      })
-      .catch((error) => {
-        console.error('❌ Failed to load flappy-level.json:', error);
-      });
 
     function drawCandle() {
       ctx.drawImage(candleImage, candle.x, candle.y, candle.width, candle.height);
