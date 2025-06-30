@@ -1,4 +1,4 @@
-    // ✅ Updated fetch path to flappy-level.json in root
+    // ✅ Updated fetch path to point to root
     fetch('./flappy-level.json')
       .then(response => {
         if (!response.ok) throw new Error('Failed to load flappy-level.json');
