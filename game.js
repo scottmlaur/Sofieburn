@@ -16,6 +16,10 @@ document.addEventListener('DOMContentLoaded', () => {
     introScreen.style.display = 'none';
     gameCanvas.style.display = 'block';
 
+    // ✅ Set canvas size explicitly
+    gameCanvas.width = window.innerWidth;
+    gameCanvas.height = window.innerHeight;
+
     const bgImage = new Image();
     bgImage.src = 'assets/backgrounds/sanctuary_bg.png';
 
