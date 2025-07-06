@@ -1,81 +1,110 @@
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('🔥 DOM Ready, binding start button');
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
 
-  const startButton = document.getElementById('startButton');
-  const introScreen = document.getElementById('intro-screen');
-  const gameCanvas = document.getElementById('gameCanvas');
-  const ctx = gameCanvas?.getContext('2d');
+const bg = new Image();
+bg.src = "assets/backgrounds/sanctuary_bg.png";
 
-  if (!startButton || !introScreen || !gameCanvas || !ctx) {
-    console.error('❌ Missing elements in DOM. Check your HTML IDs.');
+const candle = new Image();
+candle.src = "assets/characters/candle.png";
+
+const pipeImg = new Image();
+pipeImg.src = "assets/obstacles/stone.png";
+
+let bgX = 0;
+let candleY = canvas.height / 2;
+let candleVelocity = 0;
+let gravity = 0.5;
+let spacePressed = false;
+
+const pipes = [];
+const pipeGap = 150;
+const pipeWidth = 80;
+const pipeSpeed = 2;
+
+function spawnPipe() {
+  const topHeight = Math.random() * (canvas.height - pipeGap - 100) + 50;
+  pipes.push({
+    x: canvas.width,
+    top: topHeight,
+    bottom: topHeight + pipeGap
+  });
+}
+
+function drawBackground() {
+  bgX -= pipeSpeed;
+  if (bgX <= -canvas.width) {
+    bgX = 0;
+  }
+  ctx.drawImage(bg, bgX, 0, canvas.width, canvas.height);
+  ctx.drawImage(bg, bgX + canvas.width, 0, canvas.width, canvas.height);
+}
+
+function drawCandle() {
+  ctx.drawImage(candle, 50, candleY, 40, 40);
+}
+
+function drawPipes() {
+  pipes.forEach(pipe => {
+    // Draw top pipe
+    ctx.save();
+    ctx.translate(pipe.x + pipeWidth / 2, pipe.top / 2);
+    ctx.scale(1, -1);
+    ctx.drawImage(pipeImg, -pipeWidth / 2, -pipe.top / 2, pipeWidth, pipe.top);
+    ctx.restore();
+
+    // Draw bottom pipe
+    ctx.drawImage(pipeImg, pipe.x, pipe.bottom, pipeWidth, canvas.height - pipe.bottom);
+  });
+}
+
+function updatePipes() {
+  pipes.forEach(pipe => pipe.x -= pipeSpeed);
+  if (pipes.length > 0 && pipes[0].x + pipeWidth < 0) {
+    pipes.shift();
+  }
+}
+
+function checkCollision() {
+  return pipes.some(pipe => {
+    return (
+      50 + 40 > pipe.x &&
+      50 < pipe.x + pipeWidth &&
+      (candleY < pipe.top || candleY + 40 > pipe.bottom)
+    );
+  });
+}
+
+function gameLoop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawBackground();
+
+  candleVelocity += gravity;
+  candleY += candleVelocity;
+  if (candleY + 40 > canvas.height) candleY = canvas.height - 40;
+
+  drawCandle();
+  drawPipes();
+  updatePipes();
+
+  if (checkCollision()) {
+    alert("Game Over");
+    window.location.reload();
     return;
   }
 
-  startButton.addEventListener('click', () => {
-    console.log('🚀 Starting game...');
-    introScreen.style.display = 'none';
-    gameCanvas.style.display = 'block';
+  requestAnimationFrame(gameLoop);
+}
 
-    gameCanvas.width = window.innerWidth;
-    gameCanvas.height = window.innerHeight;
+document.addEventListener("keydown", (e) => {
+  if (e.code === "Space") {
+    candleVelocity = -8;
+  }
+});
 
-    const bgImage = new Image();
-    bgImage.src = 'assets/backgrounds/sanctuary_bg.png';
-
-    const candleImage = new Image();
-    candleImage.src = './assets/characters/candle.png';
-
-    const candle = {
-      x: gameCanvas.width / 4,
-      y: gameCanvas.height / 2,
-      width: 50,
-      height: 80
-    };
-
-    bgImage.onload = () => {
-      console.log('🖼️ Background image loaded.');
-
-      if (candleImage.complete) {
-        console.log('🕯️ Candle image already loaded.');
-        requestAnimationFrame(gameLoop);
-      } else {
-        candleImage.onload = () => {
-          console.log('🕯️ Candle image loaded.');
-          requestAnimationFrame(gameLoop);
-        };
-      }
-    };
-
-    candleImage.onerror = () => {
-      console.error('❌ Failed to load candle image. Check path: ./assets/characters/candle.png');
-    };
-
-    function drawCandle() {
-      ctx.drawImage(candleImage, candle.x, candle.y, candle.width, candle.height);
-    }
-
-    function gameLoop() {
-      ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-      ctx.drawImage(bgImage, 0, 0, gameCanvas.width, gameCanvas.height);
-      drawCandle();
-      requestAnimationFrame(gameLoop);
-    }
-
-    // ✅ Load the level JSON data (added surgically)
-    fetch('data/flappy-level.json')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(levelData => {
-        console.log("🕯️ Detailed level loaded:", levelData);
-        initializeLevel(levelData); // assumes this already works
-      })
-      .catch(error => {
-        console.error("❌ Failed to load flappy-level.json:", error);
-      });
-
-  });
+document.getElementById("startButton").addEventListener("click", () => {
+  document.getElementById("intro-screen").style.display = "none";
+  canvas.style.display = "block";
+  spawnPipe();
+  setInterval(spawnPipe, 2000);
+  requestAnimationFrame(gameLoop);
 });
