@@ -20,12 +20,42 @@ body {
   background-color: #0f0f0f;
   border: 1px solid #fca17d;
   image-rendering: pixelated;
-  max-width: 100vw;
-  max-height: 100vh;
   outline: none;
+  
+  /* Mobile-responsive sizing */
+  width: 100%;
+  height: auto;
+  max-width: 95vw;   /* Limit width on mobile */
+  max-height: 60vh;  /* Limit height on mobile */
+  object-fit: contain;
 }
 
-/* === Utility Classes (optional for future UI) === */
+/* === Mobile-specific adjustments === */
+@media (max-width: 768px) {
+  #gameCanvas {
+    border-width: 1px; /* Keep thin border on mobile */
+    max-width: 98vw;   /* Use more screen width on mobile */
+    max-height: 70vh;  /* Allow more screen height on mobile */
+  }
+}
+
+/* === Landscape mobile optimization === */
+@media (max-height: 500px) and (orientation: landscape) {
+  #gameCanvas {
+    max-height: 85vh;  /* Use more height in landscape */
+    max-width: 90vw;
+  }
+}
+
+/* === Very small screens === */
+@media (max-width: 480px) {
+  #gameCanvas {
+    max-width: 99vw;
+    max-height: 75vh;
+  }
+}
+
+/* === Utility Classes === */
 .hidden {
   display: none !important;
 }
@@ -36,7 +66,7 @@ body {
   justify-content: center;
 }
 
-/* === Transitions (optional polish) === */
+/* === Transitions === */
 .fade-in {
   opacity: 0;
   animation: fadeIn 1.5s ease forwards;
